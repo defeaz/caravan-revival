@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" fill="#263f35"/>
+  <circle cx="600" cy="565" r="480" fill="none" stroke="#f4efdf" stroke-width="10"/>
+  <g fill="#f4efdf">
+    <path d="M739 190 744 211 765 216 744 221 739 242 734 221 713 216 734 211Z"/>
+    <path d="M677 231 681 246 696 250 681 254 677 269 673 254 658 250 673 246Z"/>
+    <path d="M810 247 817 275 845 282 817 289 810 317 803 289 775 282 803 275Z"/>
+  </g>
+  <g transform="translate(-40 0)" fill="#263f35" stroke="#f4efdf" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M355 532V452c0-49 9-85 30-114 26-37 66-55 121-60 60-5 130-7 210-3 47 2 78 16 99 45 23 30 34 75 34 138v40c0 34-7 59-22 75-17 19-44 27-82 27H447c-36 0-60-7-74-22-12-14-18-29-18-46Z"/>
+    <rect x="427" y="365" width="136" height="73" rx="17" fill="none"/>
+    <path d="M660 600V371c0-26 16-42 42-42h27c26 0 42 16 42 42v229" fill="none"/>
+    <path d="M355 474h305M771 474h78" fill="none" stroke-width="9"/>
+    <path d="M725 441h15" fill="none" stroke-width="12"/>
+    <circle cx="561" cy="585" r="56"/>
+    <circle cx="561" cy="585" r="19" fill="#f4efdf"/>
+    <path d="M846 535 925 562 846 579M925 562h34" fill="none"/>
+    <path d="M908 557v38" fill="none" stroke-width="10"/>
+    <circle cx="908" cy="602" r="9" fill="#f4efdf" stroke-width="7"/>
+  </g>
+  <path d="M340 644h525" fill="none" stroke="#f4efdf" stroke-width="9" stroke-linecap="round"/>
+  <g fill="#f4efdf" font-family="Montserrat, Gotham, 'Avenir Next', Arial, sans-serif" text-anchor="middle">
+    <text x="600" y="796" font-size="91" font-weight="700" letter-spacing="13">CARAVAN</text>
+    <path d="M356 856h62M768 856h62" stroke="#f4efdf" stroke-width="8" stroke-linecap="round"/>
+    <text x="600" y="878" font-size="64" font-weight="600" letter-spacing="8">REVIVAL</text>
+  </g>
+</svg>
