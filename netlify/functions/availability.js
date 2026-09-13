@@ -9,16 +9,16 @@ export default async req => {
   const db = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const start = new Date(); start.setDate(start.getDate() + 1);
   const end = new Date(start); end.setDate(end.getDate() + 60);
-  const { data: blocked } = await db.from('blocked_dates').select('booking_date')
+  const { data: available, error: availabilityError } = await db.from('available_dates').select('booking_date')
     .gte('booking_date', start.toISOString().slice(0, 10)).lte('booking_date', end.toISOString().slice(0, 10));
+  if (availabilityError) return Response.json({ error: 'Availability is temporarily unavailable.' }, { status: 500 });
   const { data: bookings } = await db.from('bookings').select('booking_date,postcode_area,service,status')
     .gte('booking_date', start.toISOString().slice(0, 10)).neq('status', 'cancelled');
-  const blockedSet = new Set((blocked || []).map(x => x.booking_date));
+  const availableSet = new Set((available || []).map(x => x.booking_date));
   const wanted = postcodeArea(postcode), dates = [];
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-    if (d.getDay() === 0) continue;
     const day = d.toISOString().slice(0, 10);
-    if (blockedSet.has(day)) continue;
+    if (!availableSet.has(day)) continue;
     const b = (bookings || []).filter(x => x.booking_date === day);
     if (!b.some(x => x.postcode_area !== wanted) && b.length < 2) {
       dates.push({ value: day, label: new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(day + 'T12:00:00')) });
