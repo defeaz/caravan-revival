@@ -33,12 +33,12 @@ export default async req => {
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const base = process.env.URL || 'https://caravanrevival.com';
-    const repeat = b.service === 'regular4' ? ' then every 4 weeks' : b.service === 'regular8' ? ' then every 8 weeks' : '';
+    const repeat = { monthly: ' then every month', two_monthly: ' then every 2 months', three_monthly: ' then every 3 months' }[b.service] || '';
     const session = await stripe.checkout.sessions.create({
       mode: 'payment', customer_email: b.email,
       line_items: [{ price_data: { currency: 'gbp', unit_amount: 3000, product_data: {
         name: 'Caravan Revival booking deposit',
-        description: `${b.date} · ${b.model} · initial clean £${cleanPrice}${repeat}`
+        description: `${b.date} · ${b.model} · one-off clean £${cleanPrice}${repeat}`
       } }, quantity: 1 }],
       metadata: { booking_id: ref }, success_url: `${base}/confirmed?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${base}/#book`, payment_intent_data: { description: `Deposit for ${b.name} — ${b.date}` }
