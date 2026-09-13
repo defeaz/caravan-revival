@@ -1,4 +1,4 @@
-.hero-mark{transform:none;display:flex;align-items:center;justify-content:center;border:0}
+.hero-mark{transform:none;display:flex;align-items:center;justify-content:center;border:0;width:min(38vw,500px)}
 .hero-mark img{display:block;width:100%;height:100%;object-fit:contain}
 .deposit small{margin-top:.45rem;color:#f4efdf}#form-status{min-height:1.4em;color:#9e3e27;font-weight:700;font-size:.84rem}
 .size-picker{border:0;padding:0;margin:1.2rem 0;display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}.size-picker legend{font-size:.8rem;font-weight:700;margin-bottom:.45rem}

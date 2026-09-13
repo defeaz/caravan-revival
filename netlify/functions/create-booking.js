@@ -33,7 +33,7 @@ export default async req => {
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const base = process.env.URL || 'https://caravanrevival.com';
-    const repeat = { monthly: ' then every month', two_monthly: ' then every 2 months', three_monthly: ' then every 3 months' }[b.service] || '';
+    const repeat = b.service === 'ongoing' ? ' · ongoing cleaning requested' : '';
     const session = await stripe.checkout.sessions.create({
       mode: 'payment', customer_email: b.email,
       line_items: [{ price_data: { currency: 'gbp', unit_amount: 3000, product_data: {
