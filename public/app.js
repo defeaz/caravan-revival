@@ -63,9 +63,11 @@ document
     status.textContent = 'Checking nearby availability…';
 
     try {
-      const response = await fetch(
-        `/api/availability?postcode=${encodeURIComponent(postcode)}`
-      );
+      const params = new URLSearchParams({
+        postcode,
+        service: service.value
+      });
+      const response = await fetch(`/api/availability?${params}`);
 
       const data = await response.json();
 

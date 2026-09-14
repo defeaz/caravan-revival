@@ -1,6 +1,11 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { priceFor, postcodeArea, isServed } from '../../lib/config.js';
+import {
+  canFitBooking,
+  priceFor,
+  postcodeArea,
+  isServed
+} from '../../lib/config.js';
 
 export default async req => {
   if (req.method !== 'POST') return new Response('', { status: 405 });
@@ -14,11 +19,8 @@ export default async req => {
   const { data: existing, error: readError } = await db.from('bookings')
     .select('postcode_area,service,status').eq('booking_date', b.date).neq('status', 'cancelled');
   if (readError) return Response.json({ error: `Database check failed: ${readError.message}` }, { status: 500 });
-  if ((existing || []).some(x => x.postcode_area !== postcodeArea(b.postcode))) {
-    return Response.json({ error: 'That date has just been reserved in another area. Please choose another.' }, { status: 409 });
-  }
-  if ((existing || []).length >= 2) {
-    return Response.json({ error: 'That date has just filled. Please choose another.' }, { status: 409 });
+  if (!canFitBooking(existing || [], b.service, postcodeArea(b.postcode))) {
+    return Response.json({ error: 'That date has just filled or is now reserved for work in another area. Please choose another.' }, { status: 409 });
   }
 
   const ref = crypto.randomUUID();

@@ -1,9 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
-import { isServed, postcodeArea } from '../../lib/config.js';
+import {
+  canFitBooking,
+  isServed,
+  postcodeArea,
+  serviceLoad
+} from '../../lib/config.js';
 
 export default async req => {
-  const postcode = new URL(req.url).searchParams.get('postcode')?.trim() || '';
-  if (!isServed(postcode)) {
+  const url = new URL(req.url);
+  const postcode = url.searchParams.get('postcode')?.trim() || '';
+  const service = url.searchParams.get('service') || 'oneoff';
+  if (!isServed(postcode) || !serviceLoad(service)) {
     return Response.json({ error: 'This postcode is outside the Caravan Revival service area. Please send an enquiry if you would like us to consider travelling further.' }, { status: 400 });
   }
   const db = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -20,7 +27,7 @@ export default async req => {
     const day = d.toISOString().slice(0, 10);
     if (!availableSet.has(day)) continue;
     const b = (bookings || []).filter(x => x.booking_date === day);
-    if (!b.some(x => x.postcode_area !== wanted) && b.length < 2) {
+    if (canFitBooking(b, service, wanted)) {
       dates.push({ value: day, label: new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(day + 'T12:00:00')) });
     }
     if (dates.length === 12) break;
