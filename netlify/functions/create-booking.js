@@ -10,28 +10,18 @@ import {
   serviceLoad
 } from '../../lib/config.js';
 
-const allowedOrigins = new Set([
-  'https://caravanrevival.com',
-  'https://www.caravanrevival.com',
-  'https://harbourshine.com',
-  'https://www.harbourshine.com'
-]);
-
-function corsHeaders(origin) {
+function corsHeaders() {
   return {
-    'access-control-allow-origin': allowedOrigins.has(origin)
-      ? origin
-      : 'https://caravanrevival.com',
+    'access-control-allow-origin': '*',
     'access-control-allow-headers': 'content-type',
     'access-control-allow-methods': 'POST, OPTIONS',
-    vary: 'Origin'
   };
 }
 
 function json(body, status, origin) {
   return Response.json(body, {
     status,
-    headers: corsHeaders(origin)
+    headers: corsHeaders()
   });
 }
 
@@ -39,15 +29,11 @@ export default async (req) => {
   const origin = req.headers.get('origin') || '';
 
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders(origin) });
-  }
-
-  if (origin && !allowedOrigins.has(origin)) {
-    return json({ error: 'Origin not allowed.' }, 403, origin);
+    return new Response(null, { status: 204, headers: corsHeaders() });
   }
 
   if (req.method !== 'POST') {
-    return new Response('', { status: 405, headers: corsHeaders(origin) });
+    return new Response('', { status: 405, headers: corsHeaders() });
   }
 
   const booking = await req.json();
