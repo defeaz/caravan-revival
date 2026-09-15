@@ -63,7 +63,7 @@ export default async (req) => {
     'email',
     'phone'
   ];
-  const boatRequired = ['locationQuery', 'length'];
+  const boatRequired = ['locationQuery', 'length', 'interiorService'];
   const required = isBoat
     ? [...commonRequired, ...boatRequired]
     : [...commonRequired, 'postcode'];
@@ -130,7 +130,7 @@ export default async (req) => {
       ? ` · ${booking.frequency}`
       : '';
   const model = isBoat
-    ? `${booking.model} · ${booking.length} ft · ${locationInput}${frequency}`
+    ? `${booking.model} · ${booking.length} ft · ${locationInput} · ${booking.interiorService}${frequency}`
     : booking.model;
   const size = isBoat ? `${booking.length} ft` : booking.size;
   const { error: insertError } = await db.from('bookings').insert({
