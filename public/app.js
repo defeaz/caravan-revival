@@ -13,8 +13,6 @@ const regularCopy = document.querySelector('#regular-copy');
 const vehicleLength = document.querySelector('#vehicle-length');
 const vehicleLengthOutput = document.querySelector('#vehicle-length-output');
 const vehicleLengthImage = document.querySelector('#vehicle-length-image');
-const vehicleLengthName = document.querySelector('#vehicle-length-name');
-const vehicleLengthBand = document.querySelector('#vehicle-length-band');
 const vehicleSize = document.querySelector('#vehicle-size');
 const vehicleType = document.querySelector('#vehicle-type');
 const priceCalculation = document.querySelector('#price-calculation');
@@ -69,28 +67,6 @@ function priceDetails(type, length) {
   };
 }
 
-function layoutDescription(type, length) {
-  if (type === 'Campervan') {
-    return length <= 5
-      ? 'Compact cab, kitchenette and sleeping area'
-      : 'Cab, lounge, kitchenette and sleeping area';
-  }
-  if (type === 'Touring caravan') {
-    if (length <= 4.5) return 'Compact two-berth lounge and kitchen';
-    if (length <= 6.2) return 'Lounge, kitchen, washroom and sleeping area';
-    return 'Lounge, kitchen, washroom and fixed sleeping areas';
-  }
-  if (type === 'Static caravan') {
-    if (length <= 8) return 'Lounge, kitchen, washroom and one bedroom';
-    if (length <= 11) return 'Lounge, kitchen, washroom and two bedrooms';
-    return 'Large lounge, kitchen, washroom and three bedrooms';
-  }
-  if (length <= 6.5) return 'Cab, lounge, kitchenette, washroom and sleeping area';
-  if (length <= 8.5) return 'Cab, lounge, kitchen, washroom and fixed bedroom';
-  if (length <= 11) return 'Large lounge, kitchen, separate washroom and bedroom';
-  return 'Full-size coach with multiple living and sleeping zones';
-}
-
 function updateVehicleLength() {
   const metres = Number(vehicleLength.value);
   const type = vehicleType.value;
@@ -101,13 +77,11 @@ function updateVehicleLength() {
   vehicleLengthOutput.textContent = `${metres.toFixed(1)} m`;
   vehicleLengthImage.src = `/assets/vehicle-sizes-v2/${drawing[2]}`;
   vehicleLengthImage.alt = drawing[3];
-  vehicleLengthName.textContent = drawing[1];
   vehicleSize.value = `${metres.toFixed(1)}m`;
   vehicleLength.style.setProperty(
     '--range-progress',
     `${((metres - 2.5) / 11.5) * 100}%`
   );
-  vehicleLengthBand.textContent = layoutDescription(type, metres);
   price.textContent = `£${details.total}`;
   priceCalculation.innerHTML =
     `<strong>How this is priced:</strong> exterior and roof £${details.exterior}` +
