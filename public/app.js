@@ -77,6 +77,10 @@ function updateVehicleLength() {
   vehicleLengthOutput.textContent = `${metres.toFixed(1)} m`;
   vehicleLengthImage.src = `/assets/vehicle-sizes-v2/${drawing[2]}`;
   vehicleLengthImage.alt = drawing[3];
+  vehicleLengthImage.style.setProperty(
+    '--vehicle-width',
+    `${70 + ((metres - 2.5) / 11.5) * 30}%`
+  );
   vehicleSize.value = `${metres.toFixed(1)}m`;
   vehicleLength.style.setProperty(
     '--range-progress',
