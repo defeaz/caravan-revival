@@ -16,89 +16,115 @@ const vehicleLengthImage = document.querySelector('#vehicle-length-image');
 const vehicleLengthName = document.querySelector('#vehicle-length-name');
 const vehicleLengthBand = document.querySelector('#vehicle-length-band');
 const vehicleSize = document.querySelector('#vehicle-size');
-const bookingSubmit = form.querySelector('button[type="submit"]');
-const quoteSizeButton = form.querySelector('.quote-size-button');
-
-const oneOffPrices = {
-  small: 125,
-  medium: 145,
-  large: 175
-};
-
-const ongoingPrices = {
-  small: 80,
-  medium: 90,
-  large: 110
-};
+const vehicleType = document.querySelector('#vehicle-type');
+const priceCalculation = document.querySelector('#price-calculation');
 
 function selectedSize() {
   return vehicleSize.value;
 }
 
 const vehicleDrawings = [
-  [3.2, 'Micro caravan', '01-micro-caravan.svg', 'Compact teardrop caravan'],
-  [4.0, 'Classic campervan', '02-classic-campervan.svg', 'Classic compact campervan'],
-  [4.8, 'Pop-top camper', '03-pop-top-camper.svg', 'Pop-top campervan'],
-  [5.5, 'Compact tourer', '04-compact-tourer.svg', 'Compact single-axle touring caravan'],
-  [6.3, 'Classic tourer', '05-classic-tourer.svg', 'Classic single-axle touring caravan'],
-  [7.0, 'Large tourer', '06-twin-axle-tourer.svg', 'Large twin-axle touring caravan'],
-  [7.7, 'Coachbuilt motorhome', '07-coachbuilt-motorhome.svg', 'Coachbuilt motorhome'],
-  [8.5, 'A-class motorhome', '08-a-class-motorhome.svg', 'A-class motorhome'],
-  [10, 'Large touring motorhome', '09-large-rv.svg', 'Large touring motorhome']
+  [4.2, 'Freedom Microlite-style caravan', 'freedom-microlite.png', 'Freedom Microlite-style compact caravan'],
+  [5.0, 'VW California-style campervan', 'vw-california.png', 'Volkswagen California-style pop-top campervan'],
+  [5.5, 'Eriba Touring-style caravan', 'eriba-touring.png', 'Eriba Touring-style pop-top caravan'],
+  [6.4, 'Swift Challenger-style tourer', 'swift-challenger.png', 'Swift Challenger-style single-axle touring caravan'],
+  [7.2, 'Swift Challenger Grande-style tourer', 'swift-challenger-grande.png', 'Swift Challenger Grande-style twin-axle touring caravan'],
+  [7.7, 'Auto-Trail F-Line-style motorhome', 'autotrail-f-line.png', 'Auto-Trail F-Line-style coachbuilt motorhome'],
+  [8.3, 'Hymer MasterLine-style motorhome', 'hymer-masterline.png', 'Hymer MasterLine-style A-class motorhome'],
+  [9.5, 'Concorde Charisma-style liner', 'concorde-charisma.png', 'Concorde Charisma-style luxury motorhome'],
+  [11.5, 'Morelo Grand Empire-style liner', 'morelo-grand-empire.png', 'Morelo Grand Empire-style three-axle motorhome'],
+  [14, '45-foot Newell-style motorcoach', 'newell-coach.png', 'Newell Coach-style full-size motorcoach']
 ];
 
-function sizeForLength(length) {
-  if (length <= 5.5) return 'small';
-  if (length <= 7) return 'medium';
-  if (length <= 8.5) return 'large';
-  return 'quote';
+function roundToFive(amount) {
+  return Math.round(amount / 5) * 5;
+}
+
+function priceDetails(type, length) {
+  const profiles = {
+    'Campervan': { exteriorBase: 50, exteriorMetre: 7, interiorBase: 30, interiorMetre: 4 },
+    'Touring caravan': { exteriorBase: 55, exteriorMetre: 9, interiorBase: 45, interiorMetre: 5 },
+    'Motorhome': { exteriorBase: 75, exteriorMetre: 11, interiorBase: 55, interiorMetre: 7 },
+    'Static caravan': { exteriorBase: 155, exteriorMetre: 12, interiorBase: 90, interiorMetre: 9 }
+  };
+  const profile = profiles[type];
+  const exterior = roundToFive(profile.exteriorBase + profile.exteriorMetre * length);
+  const interior = roundToFive(profile.interiorBase + profile.interiorMetre * length);
+  const wheels = type === 'Static caravan'
+    ? 0
+    : type === 'Touring caravan'
+      ? length > 6.5 ? 20 : 10
+      : type === 'Motorhome'
+        ? length > 9 ? 35 : 15
+        : 10;
+  const largeVehicle = type === 'Motorhome' && length > 8
+    ? roundToFive((length - 8) * 40)
+    : 0;
+  return {
+    exterior,
+    interior,
+    wheels,
+    largeVehicle,
+    total: exterior + interior + wheels + largeVehicle
+  };
+}
+
+function layoutDescription(type, length) {
+  if (type === 'Campervan') {
+    return length <= 5
+      ? 'Compact cab, kitchenette and sleeping area'
+      : 'Cab, lounge, kitchenette and sleeping area';
+  }
+  if (type === 'Touring caravan') {
+    if (length <= 4.5) return 'Compact two-berth lounge and kitchen';
+    if (length <= 6.2) return 'Lounge, kitchen, washroom and sleeping area';
+    return 'Lounge, kitchen, washroom and fixed sleeping areas';
+  }
+  if (type === 'Static caravan') {
+    if (length <= 8) return 'Lounge, kitchen, washroom and one bedroom';
+    if (length <= 11) return 'Lounge, kitchen, washroom and two bedrooms';
+    return 'Large lounge, kitchen, washroom and three bedrooms';
+  }
+  if (length <= 6.5) return 'Cab, lounge, kitchenette, washroom and sleeping area';
+  if (length <= 8.5) return 'Cab, lounge, kitchen, washroom and fixed bedroom';
+  if (length <= 11) return 'Large lounge, kitchen, separate washroom and bedroom';
+  return 'Full-size coach with multiple living and sleeping zones';
 }
 
 function updateVehicleLength() {
   const metres = Number(vehicleLength.value);
+  const type = vehicleType.value;
   const drawing = vehicleDrawings.find(([maximum]) => metres <= maximum);
-  const size = sizeForLength(metres);
-  const quotedSeparately = size === 'quote';
+  const details = priceDetails(type, metres);
+  const ongoingPrice = roundToFive(details.total * 0.65);
 
   vehicleLengthOutput.textContent = `${metres.toFixed(1)} m`;
-  vehicleLengthImage.src = `/assets/vehicle-sizes/${drawing[2]}`;
+  vehicleLengthImage.src = `/assets/vehicle-sizes-v2/${drawing[2]}`;
   vehicleLengthImage.alt = drawing[3];
   vehicleLengthName.textContent = drawing[1];
-  vehicleSize.value = size;
+  vehicleSize.value = `${metres.toFixed(1)}m`;
   vehicleLength.style.setProperty(
     '--range-progress',
-    `${((metres - 2.5) / 7.5) * 100}%`
+    `${((metres - 2.5) / 11.5) * 100}%`
   );
+  vehicleLengthBand.textContent = layoutDescription(type, metres);
+  price.textContent = `£${details.total}`;
+  priceCalculation.innerHTML =
+    `<strong>How this is priced:</strong> exterior and roof £${details.exterior}` +
+    ` · interior surfaces and rooms £${details.interior}` +
+    (details.wheels ? ` · wheels £${details.wheels}` : '') +
+    (details.largeVehicle ? ` · large-vehicle allowance £${details.largeVehicle}` : '');
 
-  if (quotedSeparately) {
-    vehicleLengthBand.textContent = 'Over 8.5 m · quoted separately';
-    price.textContent = 'Quote';
-    regularNote.hidden = true;
-  } else {
-    const label = size.charAt(0).toUpperCase() + size.slice(1);
-    vehicleLengthBand.textContent = `${label} · £${oneOffPrices[size]}`;
-    updatePrice();
-  }
-
-  bookingSubmit.hidden = quotedSeparately;
-  quoteSizeButton.hidden = !quotedSeparately;
-}
-
-function updatePrice() {
-  const size = selectedSize();
   const ongoing = service.value === 'ongoing';
-
-  price.textContent = `£${oneOffPrices[size]}`;
   regularNote.hidden = !ongoing;
-
   if (ongoing) {
     regularCopy.textContent =
-      `After that, cleans are £${ongoingPrices[size]} each.`;
+      `After that, cleans are £${ongoingPrice} each.`;
   }
 }
 
 vehicleLength?.addEventListener('input', updateVehicleLength);
-
+vehicleType?.addEventListener('change', updateVehicleLength);
 service?.addEventListener('change', updateVehicleLength);
 updateVehicleLength();
 
@@ -153,11 +179,6 @@ document
 
 form?.addEventListener('submit', async (event) => {
   event.preventDefault();
-
-  if (selectedSize() === 'quote') {
-    status.textContent = 'Vehicles over 8.5 m are quoted separately. Please send an enquiry.';
-    return;
-  }
 
   status.textContent = 'Taking you to secure payment…';
 

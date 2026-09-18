@@ -145,34 +145,42 @@
         </p>
       </div>
 
-      <div class="price-grid">
+      <div class="price-grid vehicle-price-grid">
         <article>
-          <h3>Small</h3>
-          <p class="size-band"></p>
-          <strong>£125</strong>
-          <small>Ongoing cleans £80 each</small>
+          <h3>Campervans</h3>
+          <p class="size-band">Compact cabs and living areas</p>
+          <strong>From £120</strong>
+          <small>Exact price by overall length</small>
         </article>
 
         <article>
-          <h3>Medium</h3>
-          <p class="size-band"></p>
-          <strong>£145</strong>
-          <small>Ongoing cleans £90 each</small>
+          <h3>Touring caravans</h3>
+          <p class="size-band">Single and twin-axle tourers</p>
+          <strong>From £150</strong>
+          <small>Exact price by overall length</small>
         </article>
 
         <article>
-          <h3>Large</h3>
-          <p class="size-band"></p>
-          <strong>£175</strong>
-          <small>Ongoing cleans £110 each</small>
+          <h3>Motorhomes</h3>
+          <p class="size-band">Coachbuilt, A-class and luxury liners</p>
+          <strong>From £195</strong>
+          <small>Exact price by overall length</small>
+        </article>
+
+        <article>
+          <h3>Static caravans</h3>
+          <p class="size-band">Wider bodies and larger interiors</p>
+          <strong>From £300</strong>
+          <small>Exact price by overall length</small>
         </article>
       </div>
 
       <p class="price-note">
         <strong>Ongoing cleaning:</strong>
         Start with a one-off full clean, then receive the lower price shown
-        above. Vehicles over 8.5 metres, static caravans and unusually
-        heavy cleaning are quoted separately.
+        above. Your online price accounts for the typical exterior area,
+        windows, wheels, rooms and interior surfaces for the vehicle selected.
+        Unusually heavy cleaning may require an agreed adjustment.
       </p>
     </section>
 
@@ -284,11 +292,11 @@
           <div class="two">
             <label>
               Vehicle type
-              <select name="vehicleType" required>
-                <option>Touring caravan</option>
-                <option>Motorhome</option>
-                <option>Campervan</option>
-                <option>Static caravan</option>
+              <select name="vehicleType" id="vehicle-type" required>
+                <option value="Touring caravan">Touring caravan</option>
+                <option value="Motorhome">Motorhome</option>
+                <option value="Campervan">Campervan</option>
+                <option value="Static caravan">Static caravan</option>
               </select>
             </label>
 
@@ -310,12 +318,12 @@
             <div class="vehicle-length-visual" aria-live="polite">
               <img
                 id="vehicle-length-image"
-                src="/assets/vehicle-sizes/05-classic-tourer.svg"
-                alt="Classic single-axle touring caravan"
+                src="/assets/vehicle-sizes-v2/swift-challenger.png"
+                alt="Swift Challenger-style touring caravan"
               >
               <div>
-                <strong id="vehicle-length-name">Classic tourer</strong>
-                <span id="vehicle-length-band">Medium · £145</span>
+                <strong id="vehicle-length-name">Swift Challenger-style tourer</strong>
+                <span id="vehicle-length-band">Typical four-berth layout</span>
               </div>
             </div>
 
@@ -325,21 +333,21 @@
               name="length"
               type="range"
               min="2.5"
-              max="10"
+              max="14"
               step="0.1"
               value="6"
               required
             >
-            <input id="vehicle-size" name="size" type="hidden" value="medium">
+            <input id="vehicle-size" name="size" type="hidden" value="6.0m">
 
             <div class="vehicle-length-limits" aria-hidden="true">
               <span>2.5 m</span>
               <span>8.5 m</span>
-              <span>10 m+</span>
+              <span>14 m</span>
             </div>
             <p class="vehicle-length-note">
               Measure from the furthest point at the front to the furthest point at the rear.
-              Vehicles over 8.5 m are quoted separately.
+              The slider covers everything from tiny caravans to 45-foot motorcoaches.
             </p>
           </div>
 
@@ -410,17 +418,16 @@
           </label>
 
           <div class="total" id="booking-total">
-            <span id="price-label">One-off clean price</span>
-            <strong id="total-price">£145</strong>
+            <span id="price-label">One-off full clean</span>
+            <strong id="total-price">£195</strong>
           </div>
+
+          <div class="price-calculation" id="price-calculation"></div>
 
           <button class="button full" type="submit">
             Pay £30 deposit &amp; confirm
           </button>
 
-          <a class="button full quote-size-button" href="#enquire" hidden>
-            Enquire for a price
-          </a>
         </div>
       </form>
     </section>

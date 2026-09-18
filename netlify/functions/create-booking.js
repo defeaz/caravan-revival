@@ -39,7 +39,9 @@ export default async (req) => {
   const booking = await req.json();
   const isBoat = booking.service === 'boat-oneoff' || booking.service === 'boat-regular';
   const locationInput = isBoat ? booking.locationQuery : booking.postcode;
-  const cleanPrice = isBoat ? 0 : priceFor(booking.service, booking.size);
+  const cleanPrice = isBoat
+    ? 0
+    : priceFor(booking.service, booking.vehicleType, booking.length);
   const commonRequired = [
     'date',
     'service',
