@@ -301,61 +301,47 @@
             </label>
           </div>
 
-          <fieldset class="size-picker">
-            <legend>Vehicle size — full overall length</legend>
+          <div class="vehicle-length-picker">
+            <div class="vehicle-length-heading">
+              <label for="vehicle-length">Full overall length</label>
+              <output id="vehicle-length-output" for="vehicle-length">6.0 m</output>
+            </div>
 
-            <label>
-              <input
-                type="radio"
-                name="size"
-                value="small"
+            <div class="vehicle-length-visual" aria-live="polite">
+              <img
+                id="vehicle-length-image"
+                src="/assets/vehicle-sizes/05-classic-tourer.svg"
+                alt="Classic single-axle touring caravan"
               >
+              <div>
+                <strong id="vehicle-length-name">Classic tourer</strong>
+                <span id="vehicle-length-band">Medium · £145</span>
+              </div>
+            </div>
 
-              <svg viewBox="0 0 130 58" aria-hidden="true">
-                <path d="M8 42h98l-6-27H33L16 24v18Z"></path>
-                <circle cx="43" cy="44" r="8"></circle>
-                <circle cx="87" cy="44" r="8"></circle>
-              </svg>
+            <input
+              id="vehicle-length"
+              class="vehicle-length-range"
+              name="length"
+              type="range"
+              min="2.5"
+              max="10"
+              step="0.1"
+              value="6"
+              required
+            >
+            <input id="vehicle-size" name="size" type="hidden" value="medium">
 
-              <strong>Small</strong>
-              <small>Up to 5.5 m</small>
-            </label>
-
-            <label>
-              <input
-                type="radio"
-                name="size"
-                value="medium"
-                checked
-              >
-
-              <svg viewBox="0 0 150 58" aria-hidden="true">
-                <path d="M8 42h119l-6-29H33L16 24v18Z"></path>
-                <circle cx="48" cy="44" r="8"></circle>
-                <circle cx="105" cy="44" r="8"></circle>
-              </svg>
-
-              <strong>Medium</strong>
-              <small>5.6–7.0 m</small>
-            </label>
-
-            <label>
-              <input
-                type="radio"
-                name="size"
-                value="large"
-              >
-
-              <svg viewBox="0 0 170 58" aria-hidden="true">
-                <path d="M8 42h141l-6-31H34L16 24v18Z"></path>
-                <circle cx="55" cy="44" r="8"></circle>
-                <circle cx="124" cy="44" r="8"></circle>
-              </svg>
-
-              <strong>Large</strong>
-              <small>7.1–8.5 m</small>
-            </label>
-          </fieldset>
+            <div class="vehicle-length-limits" aria-hidden="true">
+              <span>2.5 m</span>
+              <span>8.5 m</span>
+              <span>10 m+</span>
+            </div>
+            <p class="vehicle-length-note">
+              Measure from the furthest point at the front to the furthest point at the rear.
+              Vehicles over 8.5 m are quoted separately.
+            </p>
+          </div>
 
           <label>
             Make, model &amp; year
@@ -423,7 +409,7 @@
             </span>
           </label>
 
-          <div class="total">
+          <div class="total" id="booking-total">
             <span id="price-label">One-off clean price</span>
             <strong id="total-price">£145</strong>
           </div>
@@ -431,6 +417,10 @@
           <button class="button full" type="submit">
             Pay £30 deposit &amp; confirm
           </button>
+
+          <a class="button full quote-size-button" href="#enquire" hidden>
+            Enquire for a price
+          </a>
         </div>
       </form>
     </section>
