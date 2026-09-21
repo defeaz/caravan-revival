@@ -48,7 +48,8 @@ const vehicleDrawingsByType = {
     [8.5, 'vehicles/sizes/touring-caravan/large-twin-axle-v3.png', 'Large twin-axle touring caravan']
   ],
   Campervan: [
-    [7, 'vehicles/sizes/campervan/compact-campervan.png', 'Campervan']
+    [5.0, 'vehicles/sizes/campervan/vw-california.png', 'Compact campervan'],
+    [7.0, 'vehicles/sizes/campervan/compact-campervan.png', 'Large campervan']
   ],
   Motorhome: [
     [7.0, 'vehicles/sizes/motorhome/coachbuilt-motorhome-v2.png', 'Coachbuilt motorhome'],
@@ -59,11 +60,13 @@ const vehicleDrawingsByType = {
     [14, 'vehicles/sizes/motorhome/motorcoach-v3.png', 'Full-size luxury motorcoach']
   ],
   'Static caravan': [
-    [10.5, 'vehicles/sizes/static-caravan/large-static-caravan-v2.png', 'Large static caravan'],
+    [9.0, 'vehicles/sizes/static-caravan/compact-static-caravan.png', 'Compact static caravan'],
+    [10.5, 'vehicles/sizes/static-caravan/medium-static-caravan.png', 'Medium static caravan'],
+    [12.0, 'vehicles/sizes/static-caravan/large-static-caravan-v2.png', 'Large static caravan'],
     [14, 'vehicles/sizes/static-caravan/long-static-caravan-v3.png', 'Long luxury static caravan']
   ]
 };
-const vehicleLengthRanges = { 'Touring caravan': [2.5, 8.5, 6], Campervan: [4, 7, 5.5], Motorhome: [5.5, 14, 7], 'Static caravan': [8, 14, 10] };
+const vehicleLengthRanges = { 'Touring caravan': [2.5, 8.5, 6], Campervan: [4.5, 7, 5.5], Motorhome: [5.5, 14, 7], 'Static caravan': [8, 14, 10] };
 
 function roundToFive(amount) {
   return Math.round(amount / 5) * 5;
@@ -184,15 +187,22 @@ document
         throw new Error('Online booking is being updated. Please send an enquiry for now.');
       }
       params.set('action', 'availability');
-      const response = await fetch(`${bookingApi}?${params}`);
-
-      const data = await response.json();
-
-      if (!response.ok || data.error) {
-        throw new Error(
-          data.error || 'Unable to check this postcode.'
-        );
+      let data;
+      let lastError;
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        try {
+          const response = await fetch(`${bookingApi}?${params}`, { signal: controller.signal });
+          data = await response.json();
+          if (!response.ok || data.error) throw new Error(data.error || 'Unable to check this postcode.');
+          break;
+        } catch (error) {
+          lastError = error;
+          if (attempt === 0) { status.textContent = 'Still checking nearby dates…'; await new Promise(resolve => setTimeout(resolve, 700)); }
+        } finally { clearTimeout(timeout); }
       }
+      if (!data) throw lastError || new Error('Unable to check this postcode.');
 
       if (!data.dates.length) {
         throw new Error(
