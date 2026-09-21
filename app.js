@@ -22,26 +22,34 @@ function selectedSize() {
   return vehicleSize.value;
 }
 
-const vehicleDrawings = [
-  [3.0, 'vehicle-sizes-v2/micro-caravan-v2.png', 'Teardrop micro caravan'],
-  [3.5, 'vehicle-sizes-v2/compact-retro-caravan-v3.png', 'Compact touring caravan'],
-  [4.0, 'vehicle-sizes-v2/pop-top-tourer-v3.png', 'Compact pop-top touring caravan'],
-  [4.5, 'vehicle-sizes-v2/compact-tourer-v2.png', 'Compact single-axle touring caravan'],
-  [5.0, 'vehicle-sizes-v2/compact-campervan-v3.png', 'Compact pop-top campervan'],
-  [5.5, 'vehicle-sizes-v2/classic-tourer-v2.png', 'Classic single-axle touring caravan'],
-  [6.0, 'vehicle-sizes-v2/family-tourer-v3.png', 'Family touring caravan'],
-  [6.5, 'vehicle-sizes-v2/pop-top-camper-v2.png', 'Modern pop-top campervan'],
-  [7.0, 'vehicle-sizes-v2/large-twin-axle-v3.png', 'Large twin-axle touring caravan'],
-  [7.5, 'vehicle-sizes-v2/coachbuilt-motorhome-v2.png', 'Coachbuilt motorhome'],
-  [8.0, 'vehicle-sizes-v2/twin-axle-tourer-v2.png', 'Premium twin-axle touring caravan'],
-  [8.5, 'vehicle-sizes-v2/premium-a-class-v3.png', 'Premium A-class motorhome'],
-  [9.0, 'vehicle-sizes-v2/a-class-motorhome-v2.png', 'Integrated A-class motorhome'],
-  [9.5, 'vehicle-sizes-v2/luxury-motorhome-v3.png', 'Luxury motorhome'],
-  [10.5, 'vehicle-sizes-v2/large-static-caravan-v2.png', 'Large static caravan'],
-  [11.5, 'vehicle-sizes-v2/extra-large-motorhome-v3.png', 'Extra-large luxury motorhome'],
-  [12.5, 'vehicle-sizes-v2/long-static-caravan-v3.png', 'Long luxury static caravan'],
-  [14, 'vehicle-sizes-v2/motorcoach-v3.png', 'Full-size luxury motorcoach']
-];
+const vehicleDrawingsByType = {
+  'Touring caravan': [
+    [3.0, 'vehicle-sizes-v2/micro-caravan-v2.png', 'Teardrop micro caravan'],
+    [3.5, 'vehicle-sizes-v2/compact-retro-caravan-v3.png', 'Compact touring caravan'],
+    [4.0, 'vehicle-sizes-v2/pop-top-tourer-v3.png', 'Compact pop-top touring caravan'],
+    [4.5, 'vehicle-sizes-v2/compact-tourer-v2.png', 'Compact single-axle touring caravan'],
+    [5.5, 'vehicle-sizes-v2/classic-tourer-v2.png', 'Classic single-axle touring caravan'],
+    [6.5, 'vehicle-sizes-v2/family-tourer-v3.png', 'Family touring caravan'],
+    [7.5, 'vehicle-sizes-v2/twin-axle-tourer-v2.png', 'Twin-axle touring caravan'],
+    [14, 'vehicle-sizes-v2/large-twin-axle-v3.png', 'Large twin-axle touring caravan']
+  ],
+  Campervan: [
+    [5.5, 'vehicle-sizes-v2/compact-campervan-v3.png', 'Compact pop-top campervan'],
+    [14, 'vehicle-sizes-v2/pop-top-camper-v2.png', 'Large pop-top campervan']
+  ],
+  Motorhome: [
+    [7.0, 'vehicle-sizes-v2/coachbuilt-motorhome-v2.png', 'Coachbuilt motorhome'],
+    [8.5, 'vehicle-sizes-v2/premium-a-class-v3.png', 'Premium A-class motorhome'],
+    [9.5, 'vehicle-sizes-v2/a-class-motorhome-v2.png', 'Integrated A-class motorhome'],
+    [10.5, 'vehicle-sizes-v2/luxury-motorhome-v3.png', 'Luxury motorhome'],
+    [12.0, 'vehicle-sizes-v2/extra-large-motorhome-v3.png', 'Extra-large luxury motorhome'],
+    [14, 'vehicle-sizes-v2/motorcoach-v3.png', 'Full-size luxury motorcoach']
+  ],
+  'Static caravan': [
+    [10.5, 'vehicle-sizes-v2/large-static-caravan-v2.png', 'Large static caravan'],
+    [14, 'vehicle-sizes-v2/long-static-caravan-v3.png', 'Long luxury static caravan']
+  ]
+};
 
 function roundToFive(amount) {
   return Math.round(amount / 5) * 5;
@@ -79,7 +87,10 @@ function priceDetails(type, length) {
 function updateVehicleLength() {
   const metres = Number(vehicleLength.value);
   const type = vehicleType.value;
-  const drawing = vehicleDrawings.find(([maximum]) => metres <= maximum) || vehicleDrawings.at(-1);
+  const drawings = vehicleDrawingsByType[type] || vehicleDrawingsByType['Touring caravan'];
+  const drawingIndex = drawings.findIndex(([maximum]) => metres <= maximum);
+  const selectedIndex = drawingIndex === -1 ? drawings.length - 1 : drawingIndex;
+  const drawing = drawings[selectedIndex];
   const details = priceDetails(type, metres);
   const ongoingPrice = roundToFive(details.total * 0.65);
 
@@ -88,7 +99,7 @@ function updateVehicleLength() {
   vehicleLengthImage.alt = drawing[2];
   vehicleLengthImage.style.setProperty(
     '--vehicle-width',
-    `${45 + ((metres - 2.5) / 11.5) * 47}%`
+    `${drawings.length === 1 ? 72 : 52 + (selectedIndex / (drawings.length - 1)) * 40}%`
   );
   vehicleSize.value = `${metres.toFixed(1)}m`;
   vehicleLength.style.setProperty(
