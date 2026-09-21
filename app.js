@@ -1,6 +1,6 @@
 document.head.insertAdjacentHTML(
   'beforeend',
-  '<link rel="stylesheet" href="/updates.css?v=3">'
+  '<link rel="stylesheet" href="/updates.css?v=4">'
 );
 
 const form = document.querySelector('#booking-form');
@@ -23,8 +23,8 @@ function selectedSize() {
 }
 
 const vehicleDrawings = [
-  [3.0, 'vehicle-sizes-v2/compact-retro-caravan-v3.png', 'Compact touring caravan'],
-  [3.5, 'vehicle-sizes-v2/micro-caravan-v2.png', 'Teardrop micro caravan'],
+  [3.0, 'vehicle-sizes-v2/micro-caravan-v2.png', 'Teardrop micro caravan'],
+  [3.5, 'vehicle-sizes-v2/compact-retro-caravan-v3.png', 'Compact touring caravan'],
   [4.0, 'vehicle-sizes-v2/pop-top-tourer-v3.png', 'Compact pop-top touring caravan'],
   [4.5, 'vehicle-sizes-v2/compact-tourer-v2.png', 'Compact single-axle touring caravan'],
   [5.0, 'vehicle-sizes-v2/compact-campervan-v3.png', 'Compact pop-top campervan'],
@@ -86,6 +86,10 @@ function updateVehicleLength() {
   vehicleLengthOutput.textContent = `${metres.toFixed(1)} m`;
   vehicleLengthImage.src = `/assets/${drawing[1]}`;
   vehicleLengthImage.alt = drawing[2];
+  vehicleLengthImage.style.setProperty(
+    '--vehicle-width',
+    `${45 + ((metres - 2.5) / 11.5) * 47}%`
+  );
   vehicleSize.value = `${metres.toFixed(1)}m`;
   vehicleLength.style.setProperty(
     '--range-progress',
