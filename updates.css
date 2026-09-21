@@ -10,3 +10,4 @@ textarea{width:100%;border:1px solid #bbb4a3;background:#fff;padding:.85rem;font
 @media(max-width:1000px){.vehicle-price-grid{grid-template-columns:repeat(2,1fr)}.vehicle-price-grid article:nth-child(2){border-right:0}.vehicle-price-grid article:nth-child(3){border-top:1px solid #c7bca6}}
 @media(max-width:800px){.hero-mark{display:none}.vehicle-length-visual{height:190px}.vehicle-length-visual img{height:165px}.vehicle-price-grid{grid-template-columns:1fr}.vehicle-price-grid article{border-right:0;border-bottom:1px solid #c7bca6}.vehicle-price-grid article:nth-child(3){border-top:0}.enquiry,.reviews{grid-template-columns:1fr;padding:5rem 6vw}}
 .vehicle-length-visual img{width:min(92%,520px)!important}
+footer{background:#263f35}

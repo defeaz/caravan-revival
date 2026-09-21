@@ -1,6 +1,6 @@
 document.head.insertAdjacentHTML(
   'beforeend',
-  '<link rel="stylesheet" href="/updates.css">'
+  '<link rel="stylesheet" href="/updates.css?v=3">'
 );
 
 const form = document.querySelector('#booking-form');
@@ -22,28 +22,26 @@ function selectedSize() {
   return vehicleSize.value;
 }
 
-const vehicleDrawings = {
-  'Touring caravan': [
-    [4.5, 'freedom-microlite.png', 'Freedom Microlite-style compact caravan'],
-    [5.5, 'eriba-touring.png', 'Eriba Touring-style pop-top caravan'],
-    [6.5, 'swift-challenger.png', 'Swift Challenger-style single-axle touring caravan'],
-    [14, 'swift-challenger-grande.png', 'Swift Challenger Grande-style twin-axle touring caravan']
-  ],
-  Campervan: [
-    [5.8, 'vw-california.png', 'Volkswagen California-style pop-top campervan'],
-    [7.5, 'autotrail-f-line.png', 'Compact coachbuilt campervan'],
-    [14, 'hymer-masterline.png', 'Large touring campervan']
-  ],
-  Motorhome: [
-    [6.5, 'vw-california.png', 'Compact campervan-style motorhome'],
-    [7.7, 'autotrail-f-line.png', 'Auto-Trail F-Line-style coachbuilt motorhome'],
-    [8.5, 'hymer-masterline.png', 'Hymer MasterLine-style A-class motorhome'],
-    [9.5, 'concorde-charisma.png', 'Concorde Charisma-style luxury motorhome'],
-    [11.5, 'morelo-grand-empire.png', 'Morelo Grand Empire-style three-axle motorhome'],
-    [14, 'newell-coach.png', 'Newell Coach-style full-size motorcoach']
-  ],
-  'Static caravan': [[14, 'swift-challenger-grande.png', 'Large static caravan']]
-};
+const vehicleDrawings = [
+  [3.0, 'vehicle-sizes-v2/freedom-microlite.png', 'Freedom Microlite-style compact caravan'],
+  [3.5, 'vehicle-sizes/01-micro-caravan.svg', 'Micro caravan'],
+  [4.0, 'vehicle-sizes-v2/eriba-touring.png', 'Eriba Touring-style pop-top caravan'],
+  [4.5, 'vehicle-sizes/04-compact-tourer.svg', 'Compact touring caravan'],
+  [5.0, 'vehicle-sizes-v2/vw-california.png', 'Volkswagen California-style campervan'],
+  [5.5, 'vehicle-sizes/05-classic-tourer.svg', 'Classic single-axle caravan'],
+  [6.0, 'vehicle-sizes-v2/swift-challenger.png', 'Swift Challenger-style touring caravan'],
+  [6.5, 'vehicle-sizes/03-pop-top-camper.svg', 'Pop-top campervan'],
+  [7.0, 'vehicle-sizes-v2/swift-challenger-grande.png', 'Swift Challenger Grande-style twin-axle caravan'],
+  [7.5, 'vehicle-sizes/07-coachbuilt-motorhome.svg', 'Compact coachbuilt motorhome'],
+  [8.0, 'vehicle-sizes/06-twin-axle-tourer.svg', 'Large twin-axle touring caravan'],
+  [8.5, 'vehicle-sizes-v2/hymer-masterline.png', 'Hymer MasterLine-style A-class motorhome'],
+  [9.0, 'vehicle-sizes/08-a-class-motorhome.svg', 'A-class motorhome'],
+  [9.5, 'vehicle-sizes-v2/concorde-charisma.png', 'Concorde Charisma-style luxury motorhome'],
+  [10.5, 'vehicle-sizes/09-large-rv.svg', 'Large touring motorhome'],
+  [11.5, 'vehicle-sizes-v2/morelo-grand-empire.png', 'Morelo Grand Empire-style motorhome'],
+  [12.5, 'vehicle-sizes-v2/swift-challenger-grande.png', 'Extra-long touring caravan'],
+  [14, 'vehicle-sizes-v2/newell-coach.png', 'Full-size motorcoach']
+];
 
 function roundToFive(amount) {
   return Math.round(amount / 5) * 5;
@@ -81,13 +79,12 @@ function priceDetails(type, length) {
 function updateVehicleLength() {
   const metres = Number(vehicleLength.value);
   const type = vehicleType.value;
-  const drawings = vehicleDrawings[type] || vehicleDrawings['Touring caravan'];
-  const drawing = drawings.find(([maximum]) => metres <= maximum) || drawings.at(-1);
+  const drawing = vehicleDrawings.find(([maximum]) => metres <= maximum) || vehicleDrawings.at(-1);
   const details = priceDetails(type, metres);
   const ongoingPrice = roundToFive(details.total * 0.65);
 
   vehicleLengthOutput.textContent = `${metres.toFixed(1)} m`;
-  vehicleLengthImage.src = `/assets/vehicle-sizes-v2/${drawing[1]}`;
+  vehicleLengthImage.src = `/assets/${drawing[1]}`;
   vehicleLengthImage.alt = drawing[2];
   vehicleSize.value = `${metres.toFixed(1)}m`;
   vehicleLength.style.setProperty(
