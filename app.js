@@ -1,6 +1,6 @@
 document.head.insertAdjacentHTML(
   'beforeend',
-  '<link rel="stylesheet" href="/updates.css?v=4">'
+  '<link rel="stylesheet" href="/updates.css?v=5">'
 );
 
 const form = document.querySelector('#booking-form');
@@ -17,6 +17,20 @@ const vehicleSize = document.querySelector('#vehicle-size');
 const vehicleType = document.querySelector('#vehicle-type');
 const priceCalculation = document.querySelector('#price-calculation');
 const bookingApi = window.BOOKING_API_URL;
+const vehicleSteps = {
+  size: document.querySelector('#vehicle-step-size'),
+  location: document.querySelector('#vehicle-step-location'),
+  clean: document.querySelector('#vehicle-step-clean'),
+  book: document.querySelector('#vehicle-step-book')
+};
+
+function revealVehicleStep(step) {
+  step.hidden = false;
+  requestAnimationFrame(() => {
+    step.classList.add('is-active');
+    step.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+}
 
 function selectedSize() {
   return vehicleSize.value;
@@ -24,32 +38,32 @@ function selectedSize() {
 
 const vehicleDrawingsByType = {
   'Touring caravan': [
-    [3.0, 'vehicle-sizes-v2/micro-caravan-v2.png', 'Teardrop micro caravan'],
-    [3.5, 'vehicle-sizes-v2/compact-retro-caravan-v3.png', 'Compact touring caravan'],
-    [4.0, 'vehicle-sizes-v2/pop-top-tourer-v3.png', 'Compact pop-top touring caravan'],
-    [4.5, 'vehicle-sizes-v2/compact-tourer-v2.png', 'Compact single-axle touring caravan'],
-    [5.5, 'vehicle-sizes-v2/classic-tourer-v2.png', 'Classic single-axle touring caravan'],
-    [6.5, 'vehicle-sizes-v2/family-tourer-v3.png', 'Family touring caravan'],
-    [7.5, 'vehicle-sizes-v2/twin-axle-tourer-v2.png', 'Twin-axle touring caravan'],
-    [14, 'vehicle-sizes-v2/large-twin-axle-v3.png', 'Large twin-axle touring caravan']
+    [3.0, 'vehicles/sizes/touring-caravan/micro-caravan-v2.png', 'Teardrop micro caravan'],
+    [3.5, 'vehicles/sizes/touring-caravan/compact-retro-caravan-v3.png', 'Compact touring caravan'],
+    [4.0, 'vehicles/sizes/touring-caravan/pop-top-tourer-v3.png', 'Compact pop-top touring caravan'],
+    [4.5, 'vehicles/sizes/touring-caravan/compact-tourer-v2.png', 'Compact single-axle touring caravan'],
+    [5.5, 'vehicles/sizes/touring-caravan/classic-tourer-v2.png', 'Classic single-axle touring caravan'],
+    [6.5, 'vehicles/sizes/touring-caravan/family-tourer-v3.png', 'Family touring caravan'],
+    [7.5, 'vehicles/sizes/touring-caravan/twin-axle-tourer-v2.png', 'Twin-axle touring caravan'],
+    [8.5, 'vehicles/sizes/touring-caravan/large-twin-axle-v3.png', 'Large twin-axle touring caravan']
   ],
   Campervan: [
-    [5.5, 'vehicle-sizes-v2/compact-campervan-v3.png', 'Compact pop-top campervan'],
-    [14, 'vehicle-sizes-v2/pop-top-camper-v2.png', 'Large pop-top campervan']
+    [7, 'vehicles/sizes/campervan/compact-campervan.png', 'Campervan']
   ],
   Motorhome: [
-    [7.0, 'vehicle-sizes-v2/coachbuilt-motorhome-v2.png', 'Coachbuilt motorhome'],
-    [8.5, 'vehicle-sizes-v2/premium-a-class-v3.png', 'Premium A-class motorhome'],
-    [9.5, 'vehicle-sizes-v2/a-class-motorhome-v2.png', 'Integrated A-class motorhome'],
-    [10.5, 'vehicle-sizes-v2/luxury-motorhome-v3.png', 'Luxury motorhome'],
-    [12.0, 'vehicle-sizes-v2/extra-large-motorhome-v3.png', 'Extra-large luxury motorhome'],
-    [14, 'vehicle-sizes-v2/motorcoach-v3.png', 'Full-size luxury motorcoach']
+    [7.0, 'vehicles/sizes/motorhome/coachbuilt-motorhome-v2.png', 'Coachbuilt motorhome'],
+    [8.5, 'vehicles/sizes/motorhome/premium-a-class-v3.png', 'Premium A-class motorhome'],
+    [9.5, 'vehicles/sizes/motorhome/a-class-motorhome-v2.png', 'Integrated A-class motorhome'],
+    [10.5, 'vehicles/sizes/motorhome/luxury-motorhome-v3.png', 'Luxury motorhome'],
+    [12.0, 'vehicles/sizes/motorhome/extra-large-motorhome-v3.png', 'Extra-large luxury motorhome'],
+    [14, 'vehicles/sizes/motorhome/motorcoach-v3.png', 'Full-size luxury motorcoach']
   ],
   'Static caravan': [
-    [10.5, 'vehicle-sizes-v2/large-static-caravan-v2.png', 'Large static caravan'],
-    [14, 'vehicle-sizes-v2/long-static-caravan-v3.png', 'Long luxury static caravan']
+    [10.5, 'vehicles/sizes/static-caravan/large-static-caravan-v2.png', 'Large static caravan'],
+    [14, 'vehicles/sizes/static-caravan/long-static-caravan-v3.png', 'Long luxury static caravan']
   ]
 };
+const vehicleLengthRanges = { 'Touring caravan': [2.5, 8.5, 6], Campervan: [4, 7, 5.5], Motorhome: [5.5, 14, 7], 'Static caravan': [8, 14, 10] };
 
 function roundToFive(amount) {
   return Math.round(amount / 5) * 5;
@@ -86,7 +100,7 @@ function priceDetails(type, length) {
 
 function updateVehicleLength() {
   const metres = Number(vehicleLength.value);
-  const type = vehicleType.value;
+  const type = vehicleType.value || 'Touring caravan';
   const drawings = vehicleDrawingsByType[type] || vehicleDrawingsByType['Touring caravan'];
   const drawingIndex = drawings.findIndex(([maximum]) => metres <= maximum);
   const selectedIndex = drawingIndex === -1 ? drawings.length - 1 : drawingIndex;
@@ -97,14 +111,10 @@ function updateVehicleLength() {
   vehicleLengthOutput.textContent = `${metres.toFixed(1)} m`;
   vehicleLengthImage.src = `/assets/${drawing[1]}`;
   vehicleLengthImage.alt = drawing[2];
-  vehicleLengthImage.style.setProperty(
-    '--vehicle-width',
-    `${drawings.length === 1 ? 72 : 52 + (selectedIndex / (drawings.length - 1)) * 40}%`
-  );
   vehicleSize.value = `${metres.toFixed(1)}m`;
   vehicleLength.style.setProperty(
     '--range-progress',
-    `${((metres - 2.5) / 11.5) * 100}%`
+    `${((metres - Number(vehicleLength.min)) / (Number(vehicleLength.max) - Number(vehicleLength.min))) * 100}%`
   );
   price.textContent = `£${details.total}`;
   priceCalculation.innerHTML =
@@ -122,7 +132,30 @@ function updateVehicleLength() {
 }
 
 vehicleLength?.addEventListener('input', updateVehicleLength);
-vehicleType?.addEventListener('change', updateVehicleLength);
+document.querySelectorAll('[name="vehicleTypeChoice"]').forEach((choice) => choice.addEventListener('change', () => {
+  vehicleType.value = choice.value;
+  const [minimum, maximum, initial] = vehicleLengthRanges[choice.value];
+  vehicleLength.min = minimum;
+  vehicleLength.max = maximum;
+  vehicleLength.value = initial;
+  const limits = document.querySelectorAll('.vehicle-length-limits span');
+  limits[0].textContent = `${minimum} m`;
+  limits[1].textContent = `${((minimum + maximum) / 2).toFixed(1)} m`;
+  limits[2].textContent = `${maximum} m`;
+  fields.hidden = true;
+  updateVehicleLength();
+  revealVehicleStep(vehicleSteps.size);
+}));
+document.querySelector('#vehicle-size-next')?.addEventListener('click', () => revealVehicleStep(vehicleSteps.location));
+document.querySelector('#vehicle-location-next')?.addEventListener('click', () => {
+  const postcode = form.postcode.value.trim().toUpperCase();
+  if (!/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/.test(postcode)) {
+    status.textContent = 'Please enter a complete UK postcode.';
+    return;
+  }
+  status.textContent = '';
+  revealVehicleStep(vehicleSteps.clean);
+});
 service?.addEventListener('change', updateVehicleLength);
 updateVehicleLength();
 
@@ -132,6 +165,8 @@ document
     const postcode = form.postcode.value.trim().toUpperCase();
 
     fields.hidden = true;
+    vehicleSteps.book.hidden = true;
+    vehicleSteps.book.classList.remove('is-active');
 
     if (!/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/.test(postcode)) {
       status.textContent = 'Please enter a complete UK postcode.';
@@ -173,6 +208,7 @@ document
         .join('');
 
       fields.hidden = false;
+      revealVehicleStep(vehicleSteps.book);
       status.textContent = '';
     } catch (error) {
       status.textContent = error.message;

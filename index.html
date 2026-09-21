@@ -256,54 +256,19 @@
       </div>
 
       <form id="booking-form">
-
-        <div class="step">
-          <span>1</span>
-          <h3>Your location</h3>
-        </div>
-
-        <label>
-          Cleaning postcode
-          <input
-            name="postcode"
-            autocomplete="postal-code"
-            placeholder="e.g. BS20 7TN"
-            required
-          >
-        </label>
-
-        <button
-          class="secondary"
-          type="button"
-          id="find-dates"
-        >
-          Show nearby dates
-        </button>
-
-        <p id="form-status" aria-live="polite"></p>
-
-        <div id="booking-fields" hidden>
-
-          <div class="two">
-            <label>
-              Vehicle type
-              <select name="vehicleType" id="vehicle-type" required>
-                <option value="Touring caravan">Touring caravan</option>
-                <option value="Motorhome">Motorhome</option>
-                <option value="Campervan">Campervan</option>
-                <option value="Static caravan">Static caravan</option>
-              </select>
-            </label>
-
-            <label>
-              Cleaning arrangement
-              <select name="service" id="service" required>
-                <option value="oneoff">One-off clean</option>
-                <option value="ongoing">Ongoing cleaning</option>
-              </select>
-            </label>
+        <section class="booking-question wizard-step is-active" id="vehicle-step-type">
+          <div class="step"><span>1</span><h3>What are we cleaning?</h3></div>
+          <input type="hidden" name="vehicleType" id="vehicle-type" value="">
+          <div class="type-choice-grid">
+            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Touring caravan"><img src="/assets/vehicles/types/touring-caravan.png" alt="Touring caravan"><span>Touring caravan</span></label>
+            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Motorhome"><img src="/assets/vehicles/types/motorhome.png" alt="Motorhome"><span>Motorhome</span></label>
+            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Campervan"><img src="/assets/vehicles/types/campervan.png" alt="Campervan"><span>Campervan</span></label>
+            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Static caravan"><img src="/assets/vehicles/types/static-caravan.png" alt="Static caravan"><span>Static caravan</span></label>
           </div>
+        </section>
 
+        <section class="booking-question wizard-step" id="vehicle-step-size" hidden>
+          <div class="step"><span>2</span><h3>What is the overall length?</h3></div>
           <div class="vehicle-length-picker">
             <div class="vehicle-length-heading">
               <label for="vehicle-length">Full overall length</label>
@@ -313,7 +278,7 @@
             <div class="vehicle-length-visual" aria-live="polite">
               <img
                 id="vehicle-length-image"
-                src="/assets/vehicle-sizes-v2/family-tourer-v3.png"
+                src="/assets/vehicles/sizes/touring-caravan/family-tourer-v3.png"
                 alt="Family touring caravan"
               >
             </div>
@@ -324,7 +289,7 @@
               name="length"
               type="range"
               min="2.5"
-              max="14"
+              max="8.5"
               step="0.5"
               value="6"
               required
@@ -333,36 +298,38 @@
 
             <div class="vehicle-length-limits" aria-hidden="true">
               <span>2.5 m</span>
+              <span>5.5 m</span>
               <span>8.5 m</span>
-              <span>14 m</span>
             </div>
             <p class="vehicle-length-note">
               Measure from the furthest point at the front to the furthest point at the rear.
               The slider covers everything from tiny caravans to 45-foot motorcoaches.
             </p>
           </div>
+          <button class="button wizard-next" type="button" id="vehicle-size-next">Continue</button>
+        </section>
 
-          <label>
-            Make, model &amp; year
-            <input
-              name="model"
-              placeholder="e.g. Bailey Unicorn Madrid, 2018"
-              required
-            >
-          </label>
+        <section class="booking-question wizard-step" id="vehicle-step-location" hidden>
+          <div class="step"><span>3</span><h3>Where is it?</h3></div>
+          <label>Cleaning postcode<input name="postcode" autocomplete="postal-code" placeholder="e.g. BS20 7TN" required></label>
+          <button class="button wizard-next" type="button" id="vehicle-location-next">Continue</button>
+        </section>
 
-          <div
-            id="regular-note"
-            class="regular-note"
-            hidden
-          >
-            <strong>
-              The first visit is a one-off full clean.
-            </strong>
-
-            <span id="regular-copy"></span>
+        <section class="booking-question wizard-step" id="vehicle-step-clean" hidden>
+          <div class="step"><span>4</span><h3>Tell us about the clean</h3></div>
+          <div class="two">
+            <label>Cleaning arrangement<select name="service" id="service" required><option value="oneoff">One-off clean</option><option value="ongoing">Ongoing cleaning</option></select></label>
+            <label>Make, model &amp; year<input name="model" placeholder="e.g. Bailey Unicorn Madrid, 2018" required></label>
           </div>
+          <div id="regular-note" class="regular-note" hidden><strong>The first visit is a one-off full clean.</strong><span id="regular-copy"></span></div>
+          <button class="secondary" type="button" id="find-dates">Show nearby dates</button>
+          <p id="form-status" aria-live="polite"></p>
+        </section>
 
+        <section class="booking-question wizard-step" id="vehicle-step-book" hidden>
+          <div class="step final-step"><span>5</span><h3>Choose a date and book</h3></div>
+
+        <div id="booking-fields" hidden>
           <label>
             Available date
             <select name="date" id="date" required></select>
@@ -420,6 +387,7 @@
           </button>
 
         </div>
+        </section>
       </form>
     </section>
 
@@ -510,7 +478,7 @@
   </footer>
 
   <script src="/booking-config.js"></script>
-  <script src="/app.js?v=8" defer></script>
+  <script src="/app.js?v=10" defer></script>
 
 </body>
 </html>
