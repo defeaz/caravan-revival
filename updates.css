@@ -15,3 +15,4 @@ textarea{width:100%;border:1px solid #bbb4a3;background:#fff;padding:.85rem;font
 @media(max-width:520px){.type-choice-grid{grid-template-columns:1fr 1fr}.type-choice{min-height:130px}.type-choice img{height:85px}}
 .wizard-step[hidden]{display:none}.wizard-step{animation:wizard-in .32s ease both}.wizard-next{margin-top:.75rem;width:100%}@keyframes wizard-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 footer{background:#263f35}
+.booking{grid-template-columns:minmax(0,1fr);gap:3.5rem}.booking-copy{max-width:850px}.booking>form{width:100%;padding:clamp(1.5rem,4vw,3.5rem)}

@@ -1,6 +1,6 @@
 document.head.insertAdjacentHTML(
   'beforeend',
-  '<link rel="stylesheet" href="/updates.css?v=5">'
+  '<link rel="stylesheet" href="/updates.css?v=6">'
 );
 
 const form = document.querySelector('#booking-form');
@@ -48,8 +48,11 @@ const vehicleDrawingsByType = {
     [8.5, 'vehicles/sizes/touring-caravan/large-twin-axle-v3.png', 'Large twin-axle touring caravan']
   ],
   Campervan: [
-    [5.0, 'vehicles/sizes/campervan/vw-california.png', 'Compact campervan'],
-    [7.0, 'vehicles/sizes/campervan/compact-campervan.png', 'Large campervan']
+    [4.5, 'vehicles/sizes/campervan-v2/day-van-4-5m.png', 'Compact day van'],
+    [5.0, 'vehicles/sizes/campervan-v2/classic-pop-top-5m.png', 'Classic pop-top campervan'],
+    [5.5, 'vehicles/sizes/campervan-v2/modern-pop-top-5-5m.png', 'Modern pop-top campervan'],
+    [6.0, 'vehicles/sizes/campervan-v2/high-roof-6m.png', 'High-roof campervan'],
+    [7.0, 'vehicles/sizes/campervan-v2/long-wheelbase-6-8m.png', 'Long-wheelbase campervan']
   ],
   Motorhome: [
     [7.0, 'vehicles/sizes/motorhome/coachbuilt-motorhome-v2.png', 'Coachbuilt motorhome'],
@@ -60,10 +63,11 @@ const vehicleDrawingsByType = {
     [14, 'vehicles/sizes/motorhome/motorcoach-v3.png', 'Full-size luxury motorcoach']
   ],
   'Static caravan': [
-    [9.0, 'vehicles/sizes/static-caravan/compact-static-caravan.png', 'Compact static caravan'],
-    [10.5, 'vehicles/sizes/static-caravan/medium-static-caravan.png', 'Medium static caravan'],
-    [12.0, 'vehicles/sizes/static-caravan/large-static-caravan-v2.png', 'Large static caravan'],
-    [14, 'vehicles/sizes/static-caravan/long-static-caravan-v3.png', 'Long luxury static caravan']
+    [8.5, 'vehicles/sizes/static-caravan-v2/compact-8m.png', 'Compact static caravan'],
+    [10.0, 'vehicles/sizes/static-caravan-v2/standard-9-5m.png', 'Standard static caravan'],
+    [11.5, 'vehicles/sizes/static-caravan-v2/family-11m.png', 'Family static caravan'],
+    [13.0, 'vehicles/sizes/static-caravan-v2/large-12-5m.png', 'Large static caravan'],
+    [14.0, 'vehicles/sizes/static-caravan-v2/lodge-14m.png', 'Luxury lodge-style static caravan']
   ]
 };
 const vehicleLengthRanges = { 'Touring caravan': [2.5, 8.5, 6], Campervan: [4.5, 7, 5.5], Motorhome: [5.5, 14, 7], 'Static caravan': [8, 14, 10] };
@@ -76,8 +80,8 @@ function priceDetails(type, length) {
   const profiles = {
     'Campervan': { exteriorBase: 50, exteriorMetre: 7, interiorBase: 30, interiorMetre: 4 },
     'Touring caravan': { exteriorBase: 55, exteriorMetre: 9, interiorBase: 45, interiorMetre: 5 },
-    'Motorhome': { exteriorBase: 75, exteriorMetre: 11, interiorBase: 55, interiorMetre: 7 },
-    'Static caravan': { exteriorBase: 155, exteriorMetre: 12, interiorBase: 90, interiorMetre: 9 }
+    'Motorhome': { exteriorBase: 55, exteriorMetre: 8, interiorBase: 35, interiorMetre: 5 },
+    'Static caravan': { exteriorBase: 90, exteriorMetre: 7, interiorBase: 55, interiorMetre: 5 }
   };
   const profile = profiles[type];
   const exterior = roundToFive(profile.exteriorBase + profile.exteriorMetre * length);
@@ -89,15 +93,11 @@ function priceDetails(type, length) {
       : type === 'Motorhome'
         ? length > 9 ? 35 : 15
         : 10;
-  const largeVehicle = type === 'Motorhome' && length > 8
-    ? roundToFive((length - 8) * 40)
-    : 0;
   return {
     exterior,
     interior,
     wheels,
-    largeVehicle,
-    total: exterior + interior + wheels + largeVehicle
+    total: exterior + interior + wheels
   };
 }
 
@@ -123,8 +123,7 @@ function updateVehicleLength() {
   priceCalculation.innerHTML =
     `<strong>How this is priced:</strong> exterior and roof £${details.exterior}` +
     ` · interior surfaces and rooms £${details.interior}` +
-    (details.wheels ? ` · wheels £${details.wheels}` : '') +
-    (details.largeVehicle ? ` · large-vehicle allowance £${details.largeVehicle}` : '');
+    (details.wheels ? ` · wheels £${details.wheels}` : '');
 
   const ongoing = service.value === 'ongoing';
   regularNote.hidden = !ongoing;
