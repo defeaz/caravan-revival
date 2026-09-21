@@ -24,22 +24,22 @@ function selectedSize() {
 
 const vehicleDrawings = [
   [3.0, 'vehicle-sizes-v2/freedom-microlite.png', 'Freedom Microlite-style compact caravan'],
-  [3.5, 'vehicle-sizes/01-micro-caravan.svg', 'Micro caravan'],
+  [3.5, 'vehicle-sizes-v2/micro-caravan-v2.png', 'Teardrop micro caravan'],
   [4.0, 'vehicle-sizes-v2/eriba-touring.png', 'Eriba Touring-style pop-top caravan'],
-  [4.5, 'vehicle-sizes/04-compact-tourer.svg', 'Compact touring caravan'],
+  [4.5, 'vehicle-sizes-v2/compact-tourer-v2.png', 'Compact single-axle touring caravan'],
   [5.0, 'vehicle-sizes-v2/vw-california.png', 'Volkswagen California-style campervan'],
-  [5.5, 'vehicle-sizes/05-classic-tourer.svg', 'Classic single-axle caravan'],
+  [5.5, 'vehicle-sizes-v2/classic-tourer-v2.png', 'Classic single-axle touring caravan'],
   [6.0, 'vehicle-sizes-v2/swift-challenger.png', 'Swift Challenger-style touring caravan'],
-  [6.5, 'vehicle-sizes/03-pop-top-camper.svg', 'Pop-top campervan'],
+  [6.5, 'vehicle-sizes-v2/pop-top-camper-v2.png', 'Modern pop-top campervan'],
   [7.0, 'vehicle-sizes-v2/swift-challenger-grande.png', 'Swift Challenger Grande-style twin-axle caravan'],
-  [7.5, 'vehicle-sizes/07-coachbuilt-motorhome.svg', 'Compact coachbuilt motorhome'],
-  [8.0, 'vehicle-sizes/06-twin-axle-tourer.svg', 'Large twin-axle touring caravan'],
+  [7.5, 'vehicle-sizes-v2/coachbuilt-motorhome-v2.png', 'Coachbuilt motorhome'],
+  [8.0, 'vehicle-sizes-v2/twin-axle-tourer-v2.png', 'Premium twin-axle touring caravan'],
   [8.5, 'vehicle-sizes-v2/hymer-masterline.png', 'Hymer MasterLine-style A-class motorhome'],
-  [9.0, 'vehicle-sizes/08-a-class-motorhome.svg', 'A-class motorhome'],
+  [9.0, 'vehicle-sizes-v2/a-class-motorhome-v2.png', 'Integrated A-class motorhome'],
   [9.5, 'vehicle-sizes-v2/concorde-charisma.png', 'Concorde Charisma-style luxury motorhome'],
-  [10.5, 'vehicle-sizes/09-large-rv.svg', 'Large touring motorhome'],
+  [10.5, 'vehicle-sizes-v2/large-static-caravan-v2.png', 'Large static caravan'],
   [11.5, 'vehicle-sizes-v2/morelo-grand-empire.png', 'Morelo Grand Empire-style motorhome'],
-  [12.5, 'vehicle-sizes-v2/swift-challenger-grande.png', 'Extra-long touring caravan'],
+  [12.5, 'vehicle-sizes-v2/large-static-caravan-v2.png', 'Extra-long luxury static caravan'],
   [14, 'vehicle-sizes-v2/newell-coach.png', 'Full-size motorcoach']
 ];
 
