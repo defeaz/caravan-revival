@@ -1,6 +1,6 @@
 document.head.insertAdjacentHTML(
   'beforeend',
-  '<link rel="stylesheet" href="/updates.css">'
+  '<link rel="stylesheet" href="/updates.css?v=3">'
 );
 
 const form = document.querySelector('#booking-form');
@@ -13,92 +13,101 @@ const regularCopy = document.querySelector('#regular-copy');
 const vehicleLength = document.querySelector('#vehicle-length');
 const vehicleLengthOutput = document.querySelector('#vehicle-length-output');
 const vehicleLengthImage = document.querySelector('#vehicle-length-image');
-const vehicleLengthName = document.querySelector('#vehicle-length-name');
-const vehicleLengthBand = document.querySelector('#vehicle-length-band');
 const vehicleSize = document.querySelector('#vehicle-size');
-const bookingSubmit = form.querySelector('button[type="submit"]');
-const quoteSizeButton = form.querySelector('.quote-size-button');
-
-const oneOffPrices = {
-  small: 125,
-  medium: 145,
-  large: 175
-};
-
-const ongoingPrices = {
-  small: 80,
-  medium: 90,
-  large: 110
-};
+const vehicleType = document.querySelector('#vehicle-type');
+const priceCalculation = document.querySelector('#price-calculation');
+const bookingApi = window.BOOKING_API_URL;
 
 function selectedSize() {
   return vehicleSize.value;
 }
 
 const vehicleDrawings = [
-  [3.2, 'Micro caravan', '01-micro-caravan.svg', 'Compact teardrop caravan'],
-  [4.0, 'Classic campervan', '02-classic-campervan.svg', 'Classic compact campervan'],
-  [4.8, 'Pop-top camper', '03-pop-top-camper.svg', 'Pop-top campervan'],
-  [5.5, 'Compact tourer', '04-compact-tourer.svg', 'Compact single-axle touring caravan'],
-  [6.3, 'Classic tourer', '05-classic-tourer.svg', 'Classic single-axle touring caravan'],
-  [7.0, 'Large tourer', '06-twin-axle-tourer.svg', 'Large twin-axle touring caravan'],
-  [7.7, 'Coachbuilt motorhome', '07-coachbuilt-motorhome.svg', 'Coachbuilt motorhome'],
-  [8.5, 'A-class motorhome', '08-a-class-motorhome.svg', 'A-class motorhome'],
-  [10, 'Large touring motorhome', '09-large-rv.svg', 'Large touring motorhome']
+  [3.0, 'vehicle-sizes-v2/freedom-microlite.png', 'Freedom Microlite-style compact caravan'],
+  [3.5, 'vehicle-sizes/01-micro-caravan.svg', 'Micro caravan'],
+  [4.0, 'vehicle-sizes-v2/eriba-touring.png', 'Eriba Touring-style pop-top caravan'],
+  [4.5, 'vehicle-sizes/04-compact-tourer.svg', 'Compact touring caravan'],
+  [5.0, 'vehicle-sizes-v2/vw-california.png', 'Volkswagen California-style campervan'],
+  [5.5, 'vehicle-sizes/05-classic-tourer.svg', 'Classic single-axle caravan'],
+  [6.0, 'vehicle-sizes-v2/swift-challenger.png', 'Swift Challenger-style touring caravan'],
+  [6.5, 'vehicle-sizes/03-pop-top-camper.svg', 'Pop-top campervan'],
+  [7.0, 'vehicle-sizes-v2/swift-challenger-grande.png', 'Swift Challenger Grande-style twin-axle caravan'],
+  [7.5, 'vehicle-sizes/07-coachbuilt-motorhome.svg', 'Compact coachbuilt motorhome'],
+  [8.0, 'vehicle-sizes/06-twin-axle-tourer.svg', 'Large twin-axle touring caravan'],
+  [8.5, 'vehicle-sizes-v2/hymer-masterline.png', 'Hymer MasterLine-style A-class motorhome'],
+  [9.0, 'vehicle-sizes/08-a-class-motorhome.svg', 'A-class motorhome'],
+  [9.5, 'vehicle-sizes-v2/concorde-charisma.png', 'Concorde Charisma-style luxury motorhome'],
+  [10.5, 'vehicle-sizes/09-large-rv.svg', 'Large touring motorhome'],
+  [11.5, 'vehicle-sizes-v2/morelo-grand-empire.png', 'Morelo Grand Empire-style motorhome'],
+  [12.5, 'vehicle-sizes-v2/swift-challenger-grande.png', 'Extra-long touring caravan'],
+  [14, 'vehicle-sizes-v2/newell-coach.png', 'Full-size motorcoach']
 ];
 
-function sizeForLength(length) {
-  if (length <= 5.5) return 'small';
-  if (length <= 7) return 'medium';
-  if (length <= 8.5) return 'large';
-  return 'quote';
+function roundToFive(amount) {
+  return Math.round(amount / 5) * 5;
+}
+
+function priceDetails(type, length) {
+  const profiles = {
+    'Campervan': { exteriorBase: 50, exteriorMetre: 7, interiorBase: 30, interiorMetre: 4 },
+    'Touring caravan': { exteriorBase: 55, exteriorMetre: 9, interiorBase: 45, interiorMetre: 5 },
+    'Motorhome': { exteriorBase: 75, exteriorMetre: 11, interiorBase: 55, interiorMetre: 7 },
+    'Static caravan': { exteriorBase: 155, exteriorMetre: 12, interiorBase: 90, interiorMetre: 9 }
+  };
+  const profile = profiles[type];
+  const exterior = roundToFive(profile.exteriorBase + profile.exteriorMetre * length);
+  const interior = roundToFive(profile.interiorBase + profile.interiorMetre * length);
+  const wheels = type === 'Static caravan'
+    ? 0
+    : type === 'Touring caravan'
+      ? length > 6.5 ? 20 : 10
+      : type === 'Motorhome'
+        ? length > 9 ? 35 : 15
+        : 10;
+  const largeVehicle = type === 'Motorhome' && length > 8
+    ? roundToFive((length - 8) * 40)
+    : 0;
+  return {
+    exterior,
+    interior,
+    wheels,
+    largeVehicle,
+    total: exterior + interior + wheels + largeVehicle
+  };
 }
 
 function updateVehicleLength() {
   const metres = Number(vehicleLength.value);
-  const drawing = vehicleDrawings.find(([maximum]) => metres <= maximum);
-  const size = sizeForLength(metres);
-  const quotedSeparately = size === 'quote';
+  const type = vehicleType.value;
+  const drawing = vehicleDrawings.find(([maximum]) => metres <= maximum) || vehicleDrawings.at(-1);
+  const details = priceDetails(type, metres);
+  const ongoingPrice = roundToFive(details.total * 0.65);
 
   vehicleLengthOutput.textContent = `${metres.toFixed(1)} m`;
-  vehicleLengthImage.src = `/assets/vehicle-sizes/${drawing[2]}`;
-  vehicleLengthImage.alt = drawing[3];
-  vehicleLengthName.textContent = drawing[1];
-  vehicleSize.value = size;
+  vehicleLengthImage.src = `/assets/${drawing[1]}`;
+  vehicleLengthImage.alt = drawing[2];
+  vehicleSize.value = `${metres.toFixed(1)}m`;
   vehicleLength.style.setProperty(
     '--range-progress',
-    `${((metres - 2.5) / 7.5) * 100}%`
+    `${((metres - 2.5) / 11.5) * 100}%`
   );
+  price.textContent = `£${details.total}`;
+  priceCalculation.innerHTML =
+    `<strong>How this is priced:</strong> exterior and roof £${details.exterior}` +
+    ` · interior surfaces and rooms £${details.interior}` +
+    (details.wheels ? ` · wheels £${details.wheels}` : '') +
+    (details.largeVehicle ? ` · large-vehicle allowance £${details.largeVehicle}` : '');
 
-  if (quotedSeparately) {
-    vehicleLengthBand.textContent = 'Over 8.5 m · quoted separately';
-    price.textContent = 'Quote';
-    regularNote.hidden = true;
-  } else {
-    const label = size.charAt(0).toUpperCase() + size.slice(1);
-    vehicleLengthBand.textContent = `${label} · £${oneOffPrices[size]}`;
-    updatePrice();
-  }
-
-  bookingSubmit.hidden = quotedSeparately;
-  quoteSizeButton.hidden = !quotedSeparately;
-}
-
-function updatePrice() {
-  const size = selectedSize();
   const ongoing = service.value === 'ongoing';
-
-  price.textContent = `£${oneOffPrices[size]}`;
   regularNote.hidden = !ongoing;
-
   if (ongoing) {
     regularCopy.textContent =
-      `After that, cleans are £${ongoingPrices[size]} each.`;
+      `After that, cleans are £${ongoingPrice} each.`;
   }
 }
 
 vehicleLength?.addEventListener('input', updateVehicleLength);
-
+vehicleType?.addEventListener('change', updateVehicleLength);
 service?.addEventListener('change', updateVehicleLength);
 updateVehicleLength();
 
@@ -121,11 +130,15 @@ document
         postcode,
         service: service.value
       });
-      const response = await fetch(`/api/availability?${params}`);
+      if (!/^https:\/\/script\.google\.com\//.test(bookingApi)) {
+        throw new Error('Online booking is being updated. Please send an enquiry for now.');
+      }
+      params.set('action', 'availability');
+      const response = await fetch(`${bookingApi}?${params}`);
 
       const data = await response.json();
 
-      if (!response.ok) {
+      if (!response.ok || data.error) {
         throw new Error(
           data.error || 'Unable to check this postcode.'
         );
@@ -154,27 +167,25 @@ document
 form?.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  if (selectedSize() === 'quote') {
-    status.textContent = 'Vehicles over 8.5 m are quoted separately. Please send an enquiry.';
-    return;
-  }
-
   status.textContent = 'Taking you to secure payment…';
 
   const payload = Object.fromEntries(new FormData(form));
 
   try {
-    const response = await fetch('/api/create-booking', {
+    if (!/^https:\/\/script\.google\.com\//.test(bookingApi)) {
+      throw new Error('Online booking is being updated. Please send an enquiry for now.');
+    }
+    const response = await fetch(bookingApi, {
       method: 'POST',
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'text/plain;charset=utf-8'
       },
       body: JSON.stringify(payload)
     });
 
     const data = await response.json();
 
-    if (!response.ok) {
+    if (!response.ok || data.error || !data.url) {
       throw new Error(data.error || 'Unable to book');
     }
 
@@ -183,5 +194,31 @@ form?.addEventListener('submit', async (event) => {
     status.textContent =
       error.message ||
       'Unable to complete the booking. Please try again.';
+  }
+});
+
+document.querySelector('#enquiry-form')?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const enquiryForm = event.currentTarget;
+  const enquiryStatus = document.querySelector('#enquiry-status');
+  enquiryStatus.textContent = 'Sending…';
+
+  try {
+    if (!/^https:\/\/script\.google\.com\//.test(bookingApi)) {
+      throw new Error('Online enquiries are being updated. Please use the form later or call for now.');
+    }
+    const payload = Object.fromEntries(new FormData(enquiryForm));
+    payload.action = 'enquiry';
+    const response = await fetch(bookingApi, {
+      method: 'POST',
+      headers: { 'content-type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+    if (!response.ok || data.error) throw new Error(data.error || 'Unable to send the enquiry.');
+    enquiryForm.reset();
+    enquiryStatus.textContent = 'Thank you — your enquiry has been sent.';
+  } catch (error) {
+    enquiryStatus.textContent = error.message || 'Unable to send the enquiry.';
   }
 });
