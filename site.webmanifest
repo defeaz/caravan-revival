@@ -1,6 +1,6 @@
 {
-  "name": "Caravan Revival",
-  "short_name": "Caravan Revival",
+  "name": "Harbour Shine",
+  "short_name": "Harbour Shine",
   "icons": [
     {
       "src": "android-chrome-192x192.png",
@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#263f35",
-  "background_color": "#263f35",
+  "theme_color": "#00142f",
+  "background_color": "#00142f",
   "display": "standalone"
 }
