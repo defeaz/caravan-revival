@@ -64,7 +64,7 @@
       <a href="#background">About</a>
       <a href="#reviews">Reviews</a>
       <a href="#enquire">Enquiries</a>
-      <a class="nav-book" href="#book">Book a clean</a>
+      <a class="nav-book" href="#book">Book cleaning</a>
     </nav>
   </header>
 
@@ -78,13 +78,13 @@
         </p>
 
         <h1>
-          A proper clean.<br>
+          
           A fresh start.
         </h1>
 
         <p>
           Deep interior and exterior cleaning for caravans, campervans and
-          motorhomes—at home, in storage or on site.
+          motorhomes. And static caravans.
         </p>
 
         <a class="button" href="#book">Find a day</a>
@@ -127,7 +127,7 @@
           <span>03</span>
           <h3>Regular care</h3>
           <p>
-            Ongoing cleaning and care for your caravan/motorhome to keep it clean and UV protected.
+            Ongoing cleaning and care for your caravan/motorhome to keep it clean and protected.
           </p>
         </article>
       </div>
@@ -148,34 +148,31 @@
         <article>
           <h3>Campervans</h3>
           <strong>From £120</strong>
-          <small>Exact price by overall length</small>
+
         </article>
 
         <article>
           <h3>Touring caravans</h3>
           <strong>From £150</strong>
-          <small>Exact price by overall length</small>
+        
         </article>
 
         <article>
           <h3>Motorhomes</h3>
-          <strong>From £180</strong>
-          <small>Exact price by overall length</small>
+          <strong>From £195</strong>
+       
         </article>
 
         <article>
           <h3>Static caravans</h3>
-          <strong>From £240</strong>
-          <small>Exact price by overall length</small>
+          <strong>From £300</strong>
+    
         </article>
       </div>
 
       <p class="price-note">
         <strong>Ongoing cleaning:</strong>
-        After a full clean has been completed, ongoing cleaning is available at
-        the lower price shown in the booking form. The first full clean gets
-        everything refreshed and helps make ongoing cleaning efficient and
-        affordable.
+      Ongoing cleaning 
       </p>
     </section>
 
@@ -190,16 +187,15 @@
       <div class="background-copy">
         <p class="eyebrow">A practical background</p>
 
-        <h2>Detailing experience learnt from boat refurbishments.</h2>
+        <h2>Cleaning skills learnt from boat refurbishments.</h2>
 
         <p>
-          Caravan Revival grew from cleaning, restoration and
-          maintenance work on boats around Bristol and Portishead. That
-          experience brings careful handling of gelcoat, acrylic windows,
+          Caravan Revival grew from restoration and
+          maintenance work on boats around Bristol and Portishead, and can provide careful handling of gelcoat, acrylic windows,
           seals, upholstery and compact interiors.
         </p>
 
-        <p>Quiet, thorough work and a finish that lasts.</p>
+       
       </div>
     </section>
 
@@ -207,7 +203,7 @@
     <section id="reviews" class="reviews">
       <div>
         <p class="eyebrow">Customer reviews</p>
-        <h2>A reputation built one clean at a time.</h2>
+        <h2>A reputation built one step at a time.</h2>
       </div>
 
       <div class="review-panel">
@@ -241,7 +237,7 @@
       <div class="booking-copy">
         <p class="eyebrow">Book online</p>
 
-        <h2>Book your caravan or motorhome clean.</h2>
+        <h2>Book</h2>
 
         <p>
           Enter your postcode to see the dates available in your area, then
@@ -256,18 +252,18 @@
       </div>
 
       <form id="booking-form">
-        <section class="booking-question wizard-step is-active" id="vehicle-step-type">
+        <section class="booking-question">
           <div class="step"><span>1</span><h3>What are we cleaning?</h3></div>
-          <input type="hidden" name="vehicleType" id="vehicle-type" value="">
+          <input type="hidden" name="vehicleType" id="vehicle-type" value="Touring caravan">
           <div class="type-choice-grid">
-            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Touring caravan"><img src="/assets/vehicles/types/touring-caravan.png" alt="Touring caravan"><span>Touring caravan</span></label>
+            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Touring caravan" checked><img src="/assets/vehicles/types/touring-caravan.png" alt="Touring caravan"><span>Touring caravan</span></label>
             <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Motorhome"><img src="/assets/vehicles/types/motorhome.png" alt="Motorhome"><span>Motorhome</span></label>
-            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Campervan"><img src="/assets/vehicles/sizes/campervan-v2/modern-pop-top-5-5m.png" alt="Campervan"><span>Campervan</span></label>
-            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Static caravan"><img src="/assets/vehicles/sizes/static-caravan-v2/family-11m.png" alt="Static caravan"><span>Static caravan</span></label>
+            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Campervan"><img src="/assets/vehicles/types/campervan.png" alt="Campervan"><span>Campervan</span></label>
+            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Static caravan"><img src="/assets/vehicles/types/static-caravan.png" alt="Static caravan"><span>Static caravan</span></label>
           </div>
         </section>
 
-        <section class="booking-question wizard-step" id="vehicle-step-size" hidden>
+        <section class="booking-question">
           <div class="step"><span>2</span><h3>What is the overall length?</h3></div>
           <div class="vehicle-length-picker">
             <div class="vehicle-length-heading">
@@ -306,28 +302,25 @@
               The slider covers everything from tiny caravans to 45-foot motorcoaches.
             </p>
           </div>
-          <button class="button wizard-next" type="button" id="vehicle-size-next">Continue</button>
         </section>
 
-        <section class="booking-question wizard-step" id="vehicle-step-location" hidden>
+        <section class="booking-question">
           <div class="step"><span>3</span><h3>Where is it?</h3></div>
           <label>Cleaning postcode<input name="postcode" autocomplete="postal-code" placeholder="e.g. BS20 7TN" required></label>
-          <button class="button wizard-next" type="button" id="vehicle-location-next">Continue</button>
         </section>
 
-        <section class="booking-question wizard-step" id="vehicle-step-clean" hidden>
+        <section class="booking-question">
           <div class="step"><span>4</span><h3>Tell us about the clean</h3></div>
           <div class="two">
             <label>Cleaning arrangement<select name="service" id="service" required><option value="oneoff">One-off clean</option><option value="ongoing">Ongoing cleaning</option></select></label>
             <label>Make, model &amp; year<input name="model" placeholder="e.g. Bailey Unicorn Madrid, 2018" required></label>
           </div>
           <div id="regular-note" class="regular-note" hidden><strong>The first visit is a one-off full clean.</strong><span id="regular-copy"></span></div>
-          <button class="secondary" type="button" id="find-dates">Show nearby dates</button>
-          <p id="form-status" aria-live="polite"></p>
         </section>
 
-        <section class="booking-question wizard-step" id="vehicle-step-book" hidden>
-          <div class="step final-step"><span>5</span><h3>Choose a date and book</h3></div>
+        <div class="step final-step"><span>5</span><h3>Choose a date and book</h3></div>
+        <button class="secondary" type="button" id="find-dates">Show nearby dates</button>
+        <p id="form-status" aria-live="polite"></p>
 
         <div id="booking-fields" hidden>
           <label>
@@ -387,7 +380,6 @@
           </button>
 
         </div>
-        </section>
       </form>
     </section>
 
@@ -478,7 +470,7 @@
   </footer>
 
   <script src="/booking-config.js"></script>
-  <script src="/app.js?v=11" defer></script>
+  <script src="/app.js?v=9" defer></script>
 
 </body>
 </html>
