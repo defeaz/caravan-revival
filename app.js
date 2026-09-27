@@ -11,7 +11,7 @@ const drawings = {
   'Touring caravan': [
     [3,'touring-caravan/micro-caravan-v2.png','Micro caravan'],[3.5,'touring-caravan/compact-retro-caravan-v3.png','Compact retro caravan'],[4,'touring-caravan/pop-top-tourer-v3.png','Pop-top tourer'],[4.5,'touring-caravan/compact-tourer-v2.png','Compact tourer'],[5.5,'touring-caravan/classic-tourer-v2.png','Classic tourer'],[6.5,'touring-caravan/family-tourer-v3.png','Family tourer'],[7.5,'touring-caravan/twin-axle-tourer-v2.png','Twin-axle tourer'],[8.5,'touring-caravan/large-twin-axle-v3.png','Large twin-axle tourer']
   ],
-  Campervan: [[4.5,'../../vehicle-sizes-v2/vw-california.png','Compact pop-top camper'],[5.5,'campervan/compact-campervan.png','Pop-top campervan'],[6,'campervan/long-wheelbase-campervan.webp','Long-wheelbase campervan'],[7,'campervan/extra-long-campervan.webp','Extra-long campervan']],
+  Campervan: [[4.5,'campervan/compact-pop-top-v3.webp','Compact pop-top camper'],[5.5,'campervan/compact-campervan.png','Pop-top campervan'],[6,'campervan/long-wheelbase-campervan.webp','Long-wheelbase campervan'],[7,'campervan/extra-long-v3.webp','Extra-long campervan']],
   Motorhome: [[7,'motorhome/coachbuilt-motorhome-v2.png','Coachbuilt motorhome'],[8.5,'motorhome/premium-a-class-v3.png','A-class motorhome'],[9.5,'motorhome/a-class-motorhome-v2.png','Integrated motorhome'],[10.5,'motorhome/luxury-motorhome-v3.png','Luxury motorhome'],[12,'motorhome/extra-large-motorhome-v3.png','Large motorhome'],[14,'motorhome/motorcoach-v3.png','Motorcoach']],
   'Static caravan': [[10.5,'static-caravan/long-static-caravan-v3.png','Static caravan'],[14,'static-caravan/large-static-caravan-v2.png','Large static caravan']]
 };
@@ -27,7 +27,7 @@ function resetDates(){fields.hidden=true;document.querySelector('#date').innerHT
 function refresh(){
   const type=typeField.value, metres=Number(range.value), profile=profiles[type];
   const picture=drawings[type].find(([max])=>metres<=max) || drawings[type].at(-1);
-  image.src=picture[1].startsWith('../')?'/assets/vehicle-sizes-v2/vw-california.png':`/assets/vehicles/sizes/${picture[1]}`;
+  image.src=`/assets/vehicles/sizes/${picture[1]}`;
   image.alt=`Representative ${picture[2].toLowerCase()} profile`;
   document.querySelector('#vehicle-profile-label').textContent=`${picture[2]} profile · ${metres.toFixed(1)} m overall`;
   document.querySelector('#vehicle-length-output').textContent=`${metres.toFixed(1)} m`;
