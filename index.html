@@ -28,7 +28,7 @@
   <link rel="icon" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/updates.css?v=5">
-  <link rel="stylesheet" href="/booking-studio.css?v=1">
+  <link rel="stylesheet" href="/booking-studio.css?v=2">
 
   <script type="application/ld+json">
     {
@@ -218,15 +218,14 @@
           <fieldset class="choice-group"><legend>Services</legend>
             <div class="basket-choices"><label><input type="radio" name="service" value="oneoff" checked><span>One-off visit</span></label><label><input type="radio" name="service" value="ongoing"><span>Regular visits</span></label></div>
             <div class="basket-choices"><label><input type="radio" name="interiorService" value="Full interior detail" checked><span>Full interior detail</span></label><label><input type="radio" name="interiorService" value="Interior clean"><span>Interior refresh</span></label><label><input type="radio" name="interiorService" value="No interior cleaning"><span>No interior</span></label></div>
-            <p id="regular-note" class="regular-note" hidden>First visit at the one-off price. <span id="regular-copy"></span></p>
+            <div id="regular-frequency" class="frequency-box" hidden><span>How often?</span><div class="basket-choices"><label><input type="radio" name="frequency" value="Monthly" checked><span>Monthly</span></label><label><input type="radio" name="frequency" value="Every two months"><span>Every 2 months</span></label><label><input type="radio" name="frequency" value="Every three months"><span>Every 3 months</span></label></div></div>
           </fieldset>
         </div>
         <div class="booking-basket">
           <h3>Your booking <span aria-hidden="true">↗</span></h3>
           <div class="basket-line"><span>Exterior and roof</span><strong id="exterior-price">£0</strong></div>
           <div class="basket-line"><span id="interior-label">Full interior detail</span><strong id="interior-price">£0</strong></div>
-          <div class="basket-line"><span>Wheels and large vehicle work</span><strong id="extras-price">£0</strong></div>
-          <div class="basket-total"><span>First visit</span><strong id="total-price">£0</strong></div>
+          <div class="basket-total"><span id="total-label">One-off visit</span><strong id="total-price">£0</strong></div>
           <p class="basket-hint">Your choices update this total immediately. Travel to distant locations may be quoted separately.</p>
           <div class="booking-details">
             <label>Postcode<input name="postcode" autocomplete="postal-code" placeholder="e.g. BS20 7TN" required></label>
@@ -332,7 +331,7 @@
   </footer>
 
   <script src="/booking-config.js"></script>
-  <script src="/app.js?v=10" defer></script>
+  <script src="/app.js?v=11" defer></script>
 
 </body>
 </html>

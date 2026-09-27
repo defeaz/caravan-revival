@@ -11,9 +11,9 @@ const drawings = {
   'Touring caravan': [
     [3,'touring-caravan/micro-caravan-v2.png','Micro caravan'],[3.5,'touring-caravan/compact-retro-caravan-v3.png','Compact retro caravan'],[4,'touring-caravan/pop-top-tourer-v3.png','Pop-top tourer'],[4.5,'touring-caravan/compact-tourer-v2.png','Compact tourer'],[5.5,'touring-caravan/classic-tourer-v2.png','Classic tourer'],[6.5,'touring-caravan/family-tourer-v3.png','Family tourer'],[7.5,'touring-caravan/twin-axle-tourer-v2.png','Twin-axle tourer'],[8.5,'touring-caravan/large-twin-axle-v3.png','Large twin-axle tourer']
   ],
-  Campervan: [[4.5,'../../vehicle-sizes-v2/vw-california.png','Compact pop-top camper'],[5.5,'campervan/compact-campervan.png','Campervan'],[7,'campervan/compact-campervan.png','Long-wheelbase campervan']],
+  Campervan: [[4.5,'../../vehicle-sizes-v2/vw-california.png','Compact pop-top camper'],[5.5,'campervan/compact-campervan.png','Pop-top campervan'],[6,'campervan/long-wheelbase-campervan.webp','Long-wheelbase campervan'],[7,'campervan/extra-long-campervan.webp','Extra-long campervan']],
   Motorhome: [[7,'motorhome/coachbuilt-motorhome-v2.png','Coachbuilt motorhome'],[8.5,'motorhome/premium-a-class-v3.png','A-class motorhome'],[9.5,'motorhome/a-class-motorhome-v2.png','Integrated motorhome'],[10.5,'motorhome/luxury-motorhome-v3.png','Luxury motorhome'],[12,'motorhome/extra-large-motorhome-v3.png','Large motorhome'],[14,'motorhome/motorcoach-v3.png','Motorcoach']],
-  'Static caravan': [[10.5,'static-caravan/large-static-caravan-v2.png','Static caravan'],[14,'static-caravan/long-static-caravan-v3.png','Large static caravan']]
+  'Static caravan': [[10.5,'static-caravan/long-static-caravan-v3.png','Static caravan'],[14,'static-caravan/large-static-caravan-v2.png','Large static caravan']]
 };
 const ranges = {'Touring caravan':[2.5,8.5,6],Campervan:[4,7,5.5],Motorhome:[5.5,14,7],'Static caravan':[8,14,10]};
 const profiles = {
@@ -34,20 +34,21 @@ function refresh(){
   document.querySelector('#vehicle-size').value=`${metres.toFixed(1)}m`;
   range.style.setProperty('--range-progress',`${(metres-Number(range.min))/(Number(range.max)-Number(range.min))*100}%`);
   const exterior=round5(profile.exteriorBase+profile.exteriorMetre*metres);
-  const fullInterior=round5(profile.interiorBase+profile.interiorMetre*metres);
+  const fullInterior=round5((profile.interiorBase+profile.interiorMetre*metres)*1.5);
   const choice=form.elements.interiorService.value;
-  const interior=choice==='Full interior detail'?fullInterior:choice==='Interior clean'?round5(fullInterior*.5):0;
+  const interior=choice==='Full interior detail'?fullInterior:choice==='Interior clean'?round5(fullInterior*.62):0;
   const wheels=type==='Static caravan'?0:type==='Touring caravan'?(metres>6.5?20:10):type==='Motorhome'?(metres>9?35:15):10;
   const large=type==='Motorhome'&&metres>8?round5((metres-8)*40):0;
-  quote=exterior+interior+wheels+large;
-  document.querySelector('#exterior-price').textContent=money(exterior);
+  const ongoing=form.elements.service.value==='ongoing';
+  const exteriorPrice=ongoing?round5((exterior+wheels+large)*.7):exterior+wheels+large;
+  quote=exteriorPrice+interior;
+  document.querySelector('#exterior-price').textContent=money(exteriorPrice);
   document.querySelector('#interior-label').textContent=choice;
   document.querySelector('#interior-price').textContent=money(interior);
-  document.querySelector('#extras-price').textContent=money(wheels+large);
   document.querySelector('#total-price').textContent=money(quote);
-  const ongoing=form.elements.service.value==='ongoing';
-  document.querySelector('#regular-note').hidden=!ongoing;
-  document.querySelector('#regular-copy').textContent=`Later visits from ${money(round5((exterior+wheels+large)*.65+interior))}, according to the services selected.`;
+  document.querySelector('#total-label').textContent=ongoing?'Per visit':'One-off visit';
+  document.querySelector('#regular-frequency').hidden=!ongoing;
+  form.querySelectorAll('[name="frequency"]').forEach(el=>el.disabled=!ongoing);
 }
 function changeChoice(){resetDates();refresh();}
 range.addEventListener('input',changeChoice);
@@ -90,12 +91,12 @@ document.querySelector('#enquiry-form')?.addEventListener('submit', async (event
   enquiryStatus.textContent = 'Sending…';
 
   try {
-    if (!/^https:\/\/script\.google\.com\//.test(bookingApi)) {
+    if (!/^https:\/\/script\.google\.com\//.test(api)) {
       throw new Error('Online enquiries are being updated. Please use the form later or call for now.');
     }
     const payload = Object.fromEntries(new FormData(enquiryForm));
     payload.action = 'enquiry';
-    const response = await fetch(bookingApi, {
+    const response = await fetch(api, {
       method: 'POST',
       headers: { 'content-type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
