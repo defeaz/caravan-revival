@@ -27,6 +27,8 @@
 
   <link rel="icon" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/updates.css?v=5">
+  <link rel="stylesheet" href="/booking-studio.css?v=1">
 
   <script type="application/ld+json">
     {
@@ -60,7 +62,6 @@
 
     <nav>
       <a href="#work">Our work</a>
-      <a href="#prices">Prices</a>
       <a href="#background">About</a>
       <a href="#reviews">Reviews</a>
       <a href="#enquire">Enquiries</a>
@@ -133,49 +134,6 @@
       </div>
     </section>
 
-    <!-- PRICES -->
-    <section id="prices" class="prices">
-      <div class="price-intro">
-        <p class="eyebrow">Straightforward pricing</p>
-        <h2>One-off full clean</h2>
-        <p>
-          A very thorough interior and exterior clean. Choose the size using the
-          vehicle’s full length in the booking form.
-        </p>
-      </div>
-
-      <div class="price-grid vehicle-price-grid">
-        <article>
-          <h3>Campervans</h3>
-          <strong>From £120</strong>
-
-        </article>
-
-        <article>
-          <h3>Touring caravans</h3>
-          <strong>From £150</strong>
-        
-        </article>
-
-        <article>
-          <h3>Motorhomes</h3>
-          <strong>From £195</strong>
-       
-        </article>
-
-        <article>
-          <h3>Static caravans</h3>
-          <strong>From £300</strong>
-    
-        </article>
-      </div>
-
-      <p class="price-note">
-        <strong>Ongoing cleaning:</strong>
-      Ongoing cleaning 
-      </p>
-    </section>
-
     <!-- BACKGROUND -->
     <section id="background" class="background">
       <div
@@ -233,157 +191,61 @@
     </section>
 
     <!-- BOOKING -->
-    <section id="book" class="booking">
-      <div class="booking-copy">
-        <p class="eyebrow">Book online</p>
-
-        <h2>Book</h2>
-
-        <p>
-          Enter your postcode to see the dates available in your area, then
-          complete the booking online.
-        </p>
-
-        <div class="deposit">
-          <strong>£30 deposit</strong>
-          <span>Taken securely to confirm the booking</span>
-          <small>Remaining balance paid on completion.</small>
-        </div>
+    <section id="book" class="booking booking-studio">
+      <div class="booking-head">
+        <div><p class="eyebrow">Book online</p><h2>Build your booking</h2><p>Choose your vehicle and services. Change anything to see the price update.</p></div>
+        <p class="booking-deposit">£30 deposit to reserve a date<br><small>Balance paid after the visit</small></p>
       </div>
-
-      <form id="booking-form">
-        <section class="booking-question">
-          <div class="step"><span>1</span><h3>What are we cleaning?</h3></div>
-          <input type="hidden" name="vehicleType" id="vehicle-type" value="Touring caravan">
-          <div class="type-choice-grid">
-            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Touring caravan" checked><img src="/assets/vehicles/types/touring-caravan.png" alt="Touring caravan"><span>Touring caravan</span></label>
-            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Motorhome"><img src="/assets/vehicles/types/motorhome.png" alt="Motorhome"><span>Motorhome</span></label>
-            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Campervan"><img src="/assets/vehicles/types/campervan.png" alt="Campervan"><span>Campervan</span></label>
-            <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Static caravan"><img src="/assets/vehicles/types/static-caravan.png" alt="Static caravan"><span>Static caravan</span></label>
-          </div>
-        </section>
-
-        <section class="booking-question">
-          <div class="step"><span>2</span><h3>What is the overall length?</h3></div>
-          <div class="vehicle-length-picker">
-            <div class="vehicle-length-heading">
-              <label for="vehicle-length">Full overall length</label>
-              <output id="vehicle-length-output" for="vehicle-length">6.0 m</output>
+      <form id="booking-form" class="booking-grid">
+        <div class="booking-build">
+          <fieldset class="choice-group"><legend>Vehicle</legend>
+            <input type="hidden" name="vehicleType" id="vehicle-type" value="Touring caravan">
+            <div class="type-choice-grid">
+              <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Touring caravan" checked><img src="/assets/vehicles/types/touring-caravan.png" alt=""><span>Touring caravan</span></label>
+              <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Motorhome"><img src="/assets/vehicles/types/motorhome.png" alt=""><span>Motorhome</span></label>
+              <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Campervan"><img src="/assets/vehicles/types/campervan.png" alt=""><span>Campervan</span></label>
+              <label class="type-choice"><input type="radio" name="vehicleTypeChoice" value="Static caravan"><img src="/assets/vehicles/types/static-caravan.png" alt=""><span>Static caravan</span></label>
             </div>
-
-            <div class="vehicle-length-visual" aria-live="polite">
-              <img
-                id="vehicle-length-image"
-                src="/assets/vehicles/sizes/touring-caravan/family-tourer-v3.png"
-                alt="Family touring caravan"
-              >
-            </div>
-
-            <input
-              id="vehicle-length"
-              class="vehicle-length-range"
-              name="length"
-              type="range"
-              min="2.5"
-              max="8.5"
-              step="0.5"
-              value="6"
-              required
-            >
+          </fieldset>
+          <div class="size-card">
+            <div class="size-title"><label for="vehicle-length">Overall length</label><output id="vehicle-length-output" for="vehicle-length">6.0 m</output></div>
+            <div class="vehicle-length-visual"><img id="vehicle-length-image" src="/assets/vehicles/sizes/touring-caravan/family-tourer-v3.png" alt="Representative touring caravan"></div>
+            <input id="vehicle-length" class="vehicle-length-range" name="length" type="range" min="2.5" max="8.5" step="0.5" value="6" required>
             <input id="vehicle-size" name="size" type="hidden" value="6.0m">
-
-            <div class="vehicle-length-limits" aria-hidden="true">
-              <span>2.5 m</span>
-              <span>5.5 m</span>
-              <span>8.5 m</span>
+            <div class="vehicle-length-limits" aria-hidden="true"><span>2.5 m</span><span>5.5 m</span><span>8.5 m</span></div>
+            <p class="vehicle-profile-label" id="vehicle-profile-label">Family touring caravan profile</p>
+          </div>
+          <fieldset class="choice-group"><legend>Services</legend>
+            <div class="basket-choices"><label><input type="radio" name="service" value="oneoff" checked><span>One-off visit</span></label><label><input type="radio" name="service" value="ongoing"><span>Regular visits</span></label></div>
+            <div class="basket-choices"><label><input type="radio" name="interiorService" value="Full interior detail" checked><span>Full interior detail</span></label><label><input type="radio" name="interiorService" value="Interior clean"><span>Interior refresh</span></label><label><input type="radio" name="interiorService" value="No interior cleaning"><span>No interior</span></label></div>
+            <p id="regular-note" class="regular-note" hidden>First visit at the one-off price. <span id="regular-copy"></span></p>
+          </fieldset>
+        </div>
+        <div class="booking-basket">
+          <h3>Your booking <span aria-hidden="true">↗</span></h3>
+          <div class="basket-line"><span>Exterior and roof</span><strong id="exterior-price">£0</strong></div>
+          <div class="basket-line"><span id="interior-label">Full interior detail</span><strong id="interior-price">£0</strong></div>
+          <div class="basket-line"><span>Wheels and large vehicle work</span><strong id="extras-price">£0</strong></div>
+          <div class="basket-total"><span>First visit</span><strong id="total-price">£0</strong></div>
+          <p class="basket-hint">Your choices update this total immediately. Travel to distant locations may be quoted separately.</p>
+          <div class="booking-details">
+            <label>Postcode<input name="postcode" autocomplete="postal-code" placeholder="e.g. BS20 7TN" required></label>
+            <label>Make, model and year<input name="model" placeholder="e.g. Bailey Unicorn Madrid, 2018" required></label>
+            <button class="secondary" type="button" id="find-dates">Find dates</button>
+            <p id="form-status" role="status" aria-live="polite"></p>
+            <div id="booking-fields" hidden>
+              <label>Available date<select name="date" id="date" required></select></label>
+              <div class="two"><label>Your name<input name="name" autocomplete="name" required></label><label>Email for confirmation<input type="email" name="email" autocomplete="email" required></label></div>
+              <label>Phone<input type="tel" name="phone" autocomplete="tel" required></label>
+              <label class="check"><input type="checkbox" required><span>I can provide water and electricity and accept the <a href="/terms.html">booking terms</a>.</span></label>
+              <button class="button full" type="submit">Pay £30 deposit and reserve</button>
             </div>
-            <p class="vehicle-length-note">
-              Measure from the furthest point at the front to the furthest point at the rear.
-              The slider covers everything from tiny caravans to 45-foot motorcoaches.
-            </p>
           </div>
-        </section>
-
-        <section class="booking-question">
-          <div class="step"><span>3</span><h3>Where is it?</h3></div>
-          <label>Cleaning postcode<input name="postcode" autocomplete="postal-code" placeholder="e.g. BS20 7TN" required></label>
-        </section>
-
-        <section class="booking-question">
-          <div class="step"><span>4</span><h3>Tell us about the clean</h3></div>
-          <div class="two">
-            <label>Cleaning arrangement<select name="service" id="service" required><option value="oneoff">One-off clean</option><option value="ongoing">Ongoing cleaning</option></select></label>
-            <label>Make, model &amp; year<input name="model" placeholder="e.g. Bailey Unicorn Madrid, 2018" required></label>
-          </div>
-          <div id="regular-note" class="regular-note" hidden><strong>The first visit is a one-off full clean.</strong><span id="regular-copy"></span></div>
-        </section>
-
-        <div class="step final-step"><span>5</span><h3>Choose a date and book</h3></div>
-        <button class="secondary" type="button" id="find-dates">Show nearby dates</button>
-        <p id="form-status" aria-live="polite"></p>
-
-        <div id="booking-fields" hidden>
-          <label>
-            Available date
-            <select name="date" id="date" required></select>
-          </label>
-
-          <div class="two">
-            <label>
-              Your name
-              <input
-                name="name"
-                autocomplete="name"
-                required
-              >
-            </label>
-
-            <label>
-              Email
-              <input
-                type="email"
-                name="email"
-                autocomplete="email"
-                required
-              >
-            </label>
-          </div>
-
-          <label>
-            Phone
-            <input
-              type="tel"
-              name="phone"
-              autocomplete="tel"
-              required
-            >
-          </label>
-
-          <label class="check">
-            <input type="checkbox" required>
-
-            <span>
-              I can provide access to water and a standard electricity supply,
-              and accept the <a href="/terms.html">booking terms</a>.
-            </span>
-          </label>
-
-          <div class="total" id="booking-total">
-            <span id="price-label">One-off full clean</span>
-            <strong id="total-price">£195</strong>
-          </div>
-
-          <div class="price-calculation" id="price-calculation"></div>
-
-          <button class="button full" type="submit">
-            Pay £30 deposit &amp; confirm
-          </button>
-
         </div>
       </form>
     </section>
 
-    <!-- ENQUIRY -->
+        <!-- ENQUIRY -->
     <section id="enquire" class="enquiry">
       <div>
         <p class="eyebrow">Repairs, polishing or a question?</p>
@@ -470,7 +332,7 @@
   </footer>
 
   <script src="/booking-config.js"></script>
-  <script src="/app.js?v=9" defer></script>
+  <script src="/app.js?v=10" defer></script>
 
 </body>
 </html>

@@ -1,223 +1,86 @@
-document.head.insertAdjacentHTML(
-  'beforeend',
-  '<link rel="stylesheet" href="/updates.css?v=4">'
-);
-
 const form = document.querySelector('#booking-form');
 const fields = document.querySelector('#booking-fields');
 const status = document.querySelector('#form-status');
-const price = document.querySelector('#total-price');
-const service = document.querySelector('#service');
-const regularNote = document.querySelector('#regular-note');
-const regularCopy = document.querySelector('#regular-copy');
-const vehicleLength = document.querySelector('#vehicle-length');
-const vehicleLengthOutput = document.querySelector('#vehicle-length-output');
-const vehicleLengthImage = document.querySelector('#vehicle-length-image');
-const vehicleSize = document.querySelector('#vehicle-size');
-const vehicleType = document.querySelector('#vehicle-type');
-const priceCalculation = document.querySelector('#price-calculation');
-const bookingApi = window.BOOKING_API_URL;
-
-function selectedSize() {
-  return vehicleSize.value;
-}
-
-const vehicleDrawingsByType = {
+const range = document.querySelector('#vehicle-length');
+const image = document.querySelector('#vehicle-length-image');
+const typeField = document.querySelector('#vehicle-type');
+const api = window.BOOKING_API_URL;
+const money = n => new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:0}).format(n);
+const round5 = n => Math.round(n/5)*5;
+const drawings = {
   'Touring caravan': [
-    [3.0, 'vehicles/sizes/touring-caravan/micro-caravan-v2.png', 'Teardrop micro caravan'],
-    [3.5, 'vehicles/sizes/touring-caravan/compact-retro-caravan-v3.png', 'Compact touring caravan'],
-    [4.0, 'vehicles/sizes/touring-caravan/pop-top-tourer-v3.png', 'Compact pop-top touring caravan'],
-    [4.5, 'vehicles/sizes/touring-caravan/compact-tourer-v2.png', 'Compact single-axle touring caravan'],
-    [5.5, 'vehicles/sizes/touring-caravan/classic-tourer-v2.png', 'Classic single-axle touring caravan'],
-    [6.5, 'vehicles/sizes/touring-caravan/family-tourer-v3.png', 'Family touring caravan'],
-    [7.5, 'vehicles/sizes/touring-caravan/twin-axle-tourer-v2.png', 'Twin-axle touring caravan'],
-    [8.5, 'vehicles/sizes/touring-caravan/large-twin-axle-v3.png', 'Large twin-axle touring caravan']
+    [3,'touring-caravan/micro-caravan-v2.png','Micro caravan'],[3.5,'touring-caravan/compact-retro-caravan-v3.png','Compact retro caravan'],[4,'touring-caravan/pop-top-tourer-v3.png','Pop-top tourer'],[4.5,'touring-caravan/compact-tourer-v2.png','Compact tourer'],[5.5,'touring-caravan/classic-tourer-v2.png','Classic tourer'],[6.5,'touring-caravan/family-tourer-v3.png','Family tourer'],[7.5,'touring-caravan/twin-axle-tourer-v2.png','Twin-axle tourer'],[8.5,'touring-caravan/large-twin-axle-v3.png','Large twin-axle tourer']
   ],
-  Campervan: [
-    [7, 'vehicles/sizes/campervan/compact-campervan.png', 'Campervan']
-  ],
-  Motorhome: [
-    [7.0, 'vehicles/sizes/motorhome/coachbuilt-motorhome-v2.png', 'Coachbuilt motorhome'],
-    [8.5, 'vehicles/sizes/motorhome/premium-a-class-v3.png', 'Premium A-class motorhome'],
-    [9.5, 'vehicles/sizes/motorhome/a-class-motorhome-v2.png', 'Integrated A-class motorhome'],
-    [10.5, 'vehicles/sizes/motorhome/luxury-motorhome-v3.png', 'Luxury motorhome'],
-    [12.0, 'vehicles/sizes/motorhome/extra-large-motorhome-v3.png', 'Extra-large luxury motorhome'],
-    [14, 'vehicles/sizes/motorhome/motorcoach-v3.png', 'Full-size luxury motorcoach']
-  ],
-  'Static caravan': [
-    [10.5, 'vehicles/sizes/static-caravan/large-static-caravan-v2.png', 'Large static caravan'],
-    [14, 'vehicles/sizes/static-caravan/long-static-caravan-v3.png', 'Long luxury static caravan']
-  ]
+  Campervan: [[4.5,'../../vehicle-sizes-v2/vw-california.png','Compact pop-top camper'],[5.5,'campervan/compact-campervan.png','Campervan'],[7,'campervan/compact-campervan.png','Long-wheelbase campervan']],
+  Motorhome: [[7,'motorhome/coachbuilt-motorhome-v2.png','Coachbuilt motorhome'],[8.5,'motorhome/premium-a-class-v3.png','A-class motorhome'],[9.5,'motorhome/a-class-motorhome-v2.png','Integrated motorhome'],[10.5,'motorhome/luxury-motorhome-v3.png','Luxury motorhome'],[12,'motorhome/extra-large-motorhome-v3.png','Large motorhome'],[14,'motorhome/motorcoach-v3.png','Motorcoach']],
+  'Static caravan': [[10.5,'static-caravan/large-static-caravan-v2.png','Static caravan'],[14,'static-caravan/long-static-caravan-v3.png','Large static caravan']]
 };
-const vehicleLengthRanges = { 'Touring caravan': [2.5, 8.5, 6], Campervan: [4, 7, 5.5], Motorhome: [5.5, 14, 7], 'Static caravan': [8, 14, 10] };
-
-function roundToFive(amount) {
-  return Math.round(amount / 5) * 5;
+const ranges = {'Touring caravan':[2.5,8.5,6],Campervan:[4,7,5.5],Motorhome:[5.5,14,7],'Static caravan':[8,14,10]};
+const profiles = {
+  Campervan:{exteriorBase:50,exteriorMetre:7,interiorBase:30,interiorMetre:4},
+  'Touring caravan':{exteriorBase:55,exteriorMetre:9,interiorBase:45,interiorMetre:5},
+  Motorhome:{exteriorBase:75,exteriorMetre:11,interiorBase:55,interiorMetre:7},
+  'Static caravan':{exteriorBase:155,exteriorMetre:12,interiorBase:90,interiorMetre:9}
+};
+let quote = 0;
+function resetDates(){fields.hidden=true;document.querySelector('#date').innerHTML='';status.textContent='';}
+function refresh(){
+  const type=typeField.value, metres=Number(range.value), profile=profiles[type];
+  const picture=drawings[type].find(([max])=>metres<=max) || drawings[type].at(-1);
+  image.src=picture[1].startsWith('../')?'/assets/vehicle-sizes-v2/vw-california.png':`/assets/vehicles/sizes/${picture[1]}`;
+  image.alt=`Representative ${picture[2].toLowerCase()} profile`;
+  document.querySelector('#vehicle-profile-label').textContent=`${picture[2]} profile · ${metres.toFixed(1)} m overall`;
+  document.querySelector('#vehicle-length-output').textContent=`${metres.toFixed(1)} m`;
+  document.querySelector('#vehicle-size').value=`${metres.toFixed(1)}m`;
+  range.style.setProperty('--range-progress',`${(metres-Number(range.min))/(Number(range.max)-Number(range.min))*100}%`);
+  const exterior=round5(profile.exteriorBase+profile.exteriorMetre*metres);
+  const fullInterior=round5(profile.interiorBase+profile.interiorMetre*metres);
+  const choice=form.elements.interiorService.value;
+  const interior=choice==='Full interior detail'?fullInterior:choice==='Interior clean'?round5(fullInterior*.5):0;
+  const wheels=type==='Static caravan'?0:type==='Touring caravan'?(metres>6.5?20:10):type==='Motorhome'?(metres>9?35:15):10;
+  const large=type==='Motorhome'&&metres>8?round5((metres-8)*40):0;
+  quote=exterior+interior+wheels+large;
+  document.querySelector('#exterior-price').textContent=money(exterior);
+  document.querySelector('#interior-label').textContent=choice;
+  document.querySelector('#interior-price').textContent=money(interior);
+  document.querySelector('#extras-price').textContent=money(wheels+large);
+  document.querySelector('#total-price').textContent=money(quote);
+  const ongoing=form.elements.service.value==='ongoing';
+  document.querySelector('#regular-note').hidden=!ongoing;
+  document.querySelector('#regular-copy').textContent=`Later visits from ${money(round5((exterior+wheels+large)*.65+interior))}, according to the services selected.`;
 }
-
-function priceDetails(type, length) {
-  const profiles = {
-    'Campervan': { exteriorBase: 50, exteriorMetre: 7, interiorBase: 30, interiorMetre: 4 },
-    'Touring caravan': { exteriorBase: 55, exteriorMetre: 9, interiorBase: 45, interiorMetre: 5 },
-    'Motorhome': { exteriorBase: 75, exteriorMetre: 11, interiorBase: 55, interiorMetre: 7 },
-    'Static caravan': { exteriorBase: 155, exteriorMetre: 12, interiorBase: 90, interiorMetre: 9 }
-  };
-  const profile = profiles[type];
-  const exterior = roundToFive(profile.exteriorBase + profile.exteriorMetre * length);
-  const interior = roundToFive(profile.interiorBase + profile.interiorMetre * length);
-  const wheels = type === 'Static caravan'
-    ? 0
-    : type === 'Touring caravan'
-      ? length > 6.5 ? 20 : 10
-      : type === 'Motorhome'
-        ? length > 9 ? 35 : 15
-        : 10;
-  const largeVehicle = type === 'Motorhome' && length > 8
-    ? roundToFive((length - 8) * 40)
-    : 0;
-  return {
-    exterior,
-    interior,
-    wheels,
-    largeVehicle,
-    total: exterior + interior + wheels + largeVehicle
-  };
-}
-
-function updateVehicleLength() {
-  const metres = Number(vehicleLength.value);
-  const type = vehicleType.value;
-  const drawings = vehicleDrawingsByType[type] || vehicleDrawingsByType['Touring caravan'];
-  const drawingIndex = drawings.findIndex(([maximum]) => metres <= maximum);
-  const selectedIndex = drawingIndex === -1 ? drawings.length - 1 : drawingIndex;
-  const drawing = drawings[selectedIndex];
-  const details = priceDetails(type, metres);
-  const ongoingPrice = roundToFive(details.total * 0.65);
-
-  vehicleLengthOutput.textContent = `${metres.toFixed(1)} m`;
-  vehicleLengthImage.src = `/assets/${drawing[1]}`;
-  vehicleLengthImage.alt = drawing[2];
-  vehicleSize.value = `${metres.toFixed(1)}m`;
-  vehicleLength.style.setProperty(
-    '--range-progress',
-    `${((metres - Number(vehicleLength.min)) / (Number(vehicleLength.max) - Number(vehicleLength.min))) * 100}%`
-  );
-  price.textContent = `£${details.total}`;
-  priceCalculation.innerHTML =
-    `<strong>How this is priced:</strong> exterior and roof £${details.exterior}` +
-    ` · interior surfaces and rooms £${details.interior}` +
-    (details.wheels ? ` · wheels £${details.wheels}` : '') +
-    (details.largeVehicle ? ` · large-vehicle allowance £${details.largeVehicle}` : '');
-
-  const ongoing = service.value === 'ongoing';
-  regularNote.hidden = !ongoing;
-  if (ongoing) {
-    regularCopy.textContent =
-      `After that, cleans are £${ongoingPrice} each.`;
-  }
-}
-
-vehicleLength?.addEventListener('input', updateVehicleLength);
-document.querySelectorAll('[name="vehicleTypeChoice"]').forEach((choice) => choice.addEventListener('change', () => {
-  vehicleType.value = choice.value;
-  const [minimum, maximum, initial] = vehicleLengthRanges[choice.value];
-  vehicleLength.min = minimum;
-  vehicleLength.max = maximum;
-  vehicleLength.value = initial;
-  const limits = document.querySelectorAll('.vehicle-length-limits span');
-  limits[0].textContent = `${minimum} m`;
-  limits[1].textContent = `${((minimum + maximum) / 2).toFixed(1)} m`;
-  limits[2].textContent = `${maximum} m`;
-  fields.hidden = true;
-  updateVehicleLength();
+function changeChoice(){resetDates();refresh();}
+range.addEventListener('input',changeChoice);
+form.querySelectorAll('[name="interiorService"],[name="service"]').forEach(el=>el.addEventListener('change',changeChoice));
+form.querySelectorAll('[name="vehicleTypeChoice"]').forEach(el=>el.addEventListener('change',()=>{
+  typeField.value=el.value;
+  const [min,max,initial]=ranges[el.value];range.min=min;range.max=max;range.value=initial;
+  const labels=document.querySelectorAll('.vehicle-length-limits span');labels[0].textContent=`${min} m`;labels[1].textContent=`${((min+max)/2).toFixed(1)} m`;labels[2].textContent=`${max} m`;
+  changeChoice();
 }));
-service?.addEventListener('change', updateVehicleLength);
-updateVehicleLength();
-
-document
-  .querySelector('#find-dates')
-  ?.addEventListener('click', async () => {
-    const postcode = form.postcode.value.trim().toUpperCase();
-
-    fields.hidden = true;
-
-    if (!/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/.test(postcode)) {
-      status.textContent = 'Please enter a complete UK postcode.';
-      return;
-    }
-
-    status.textContent = 'Checking nearby availability…';
-
-    try {
-      const params = new URLSearchParams({
-        postcode,
-        service: service.value
-      });
-      if (!/^https:\/\/script\.google\.com\//.test(bookingApi)) {
-        throw new Error('Online booking is being updated. Please send an enquiry for now.');
-      }
-      params.set('action', 'availability');
-      const response = await fetch(`${bookingApi}?${params}`);
-
-      const data = await response.json();
-
-      if (!response.ok || data.error) {
-        throw new Error(
-          data.error || 'Unable to check this postcode.'
-        );
-      }
-
-      if (!data.dates.length) {
-        throw new Error(
-          'There are no nearby dates available at present. Please send an enquiry.'
-        );
-      }
-
-      document.querySelector('#date').innerHTML = data.dates
-        .map(
-          (date) =>
-            `<option value="${date.value}">${date.label}</option>`
-        )
-        .join('');
-
-      fields.hidden = false;
-      status.textContent = '';
-    } catch (error) {
-      status.textContent = error.message;
-    }
-  });
-
-form?.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  status.textContent = 'Taking you to secure payment…';
-
-  const payload = Object.fromEntries(new FormData(form));
-
-  try {
-    if (!/^https:\/\/script\.google\.com\//.test(bookingApi)) {
-      throw new Error('Online booking is being updated. Please send an enquiry for now.');
-    }
-    const response = await fetch(bookingApi, {
-      method: 'POST',
-      headers: {
-        'content-type': 'text/plain;charset=utf-8'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-
-    if (!response.ok || data.error || !data.url) {
-      throw new Error(data.error || 'Unable to book');
-    }
-
-    location.href = data.url;
-  } catch (error) {
-    status.textContent =
-      error.message ||
-      'Unable to complete the booking. Please try again.';
-  }
+form.postcode.addEventListener('input',resetDates);
+refresh();
+document.querySelector('#find-dates').addEventListener('click',async()=>{
+  const postcode=form.postcode.value.trim().toUpperCase();resetDates();
+  if(!/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/.test(postcode)){status.textContent='Enter a complete UK postcode first.';return;}
+  status.textContent='Checking dates…';
+  try{
+    const params=new URLSearchParams({action:'availability',postcode,service:form.elements.service.value});
+    const response=await fetch(`${api}?${params}`);const data=await response.json();
+    if(!response.ok||data.error)throw new Error(data.error||'Dates could not be checked.');
+    if(!data.dates?.length)throw new Error('No suitable dates are open right now. Please send an enquiry.');
+    document.querySelector('#date').replaceChildren(...data.dates.map(({value,label})=>new Option(label,value)));
+    fields.hidden=false;status.textContent='Choose a date to reserve your booking.';
+  }catch(error){status.textContent=error.message||'Dates could not be checked.';}
+});
+form.addEventListener('submit',async event=>{
+  event.preventDefault();if(fields.hidden)return;status.textContent='Opening secure payment…';
+  const payload=Object.fromEntries(new FormData(form));payload.cleanPrice=quote;
+  try{
+    const response=await fetch(api,{method:'POST',headers:{'content-type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    const data=await response.json();if(!response.ok||data.error||!data.url)throw new Error(data.error||'Booking could not be started.');
+    location.href=data.url;
+  }catch(error){status.textContent=error.message||'Booking could not be started.';}
 });
 
 document.querySelector('#enquiry-form')?.addEventListener('submit', async (event) => {
