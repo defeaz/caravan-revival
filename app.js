@@ -34,9 +34,9 @@ function refresh(){
   document.querySelector('#vehicle-size').value=`${metres.toFixed(1)}m`;
   range.style.setProperty('--range-progress',`${(metres-Number(range.min))/(Number(range.max)-Number(range.min))*100}%`);
   const exterior=round5(profile.exteriorBase+profile.exteriorMetre*metres);
-  const fullInterior=round5((profile.interiorBase+profile.interiorMetre*metres)*1.5);
+  const fullInterior=round5((profile.interiorBase+profile.interiorMetre*metres)*1.35);
   const choice=form.elements.interiorService.value;
-  const interior=choice==='Full interior detail'?fullInterior:choice==='Interior clean'?round5(fullInterior*.62):0;
+  const interior=choice==='Full interior detail'?fullInterior:choice==='Interior clean'?round5(fullInterior*.5):0;
   const wheels=type==='Static caravan'?0:type==='Touring caravan'?(metres>6.5?20:10):type==='Motorhome'?(metres>9?35:15):10;
   const large=type==='Motorhome'&&metres>8?round5((metres-8)*40):0;
   const ongoing=form.elements.service.value==='ongoing';
